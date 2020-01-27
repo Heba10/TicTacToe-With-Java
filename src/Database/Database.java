@@ -7,6 +7,8 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -16,22 +18,72 @@ import java.sql.Statement;
 public class Database{
     
   
-    public static void main(String[] args) {
-        
-        
-             try{
-   Class.forName("org.sqlite.JDBC");
+    //public static void main(String[] args) {
+    Connection conn = null;	
+    Statement stat = null; //to make quary
+    ResultSet rs =null; //to save resalt
+    public Database () throws ClassNotFoundException, SQLException {
+    Class.forName("org.sqlite.JDBC");
     String url="jdbc:sqlite:temp.db";
     Connection con=DriverManager.getConnection(url);
-     //Statement st=con.createStatement();
-    System.out.println("succesful");
+    stat = conn.createStatement();
+    String sql = " ";
     
     
-}catch(Exception ex){
+    
+    }
+    public Database (String sql) {
+        rs= conn.getState().excutetQuary();
+        
+    
+    
+    
+    
+    
+    
+    }
 
-System.out.println(" Not succesful");
-}
+        
+        
+        
+        
+        
+        
+        
+        
+           //  try{
+   //Class.forName("org.sqlite.JDBC");
+   // String url="jdbc:sqlite:temp.db";
+    //Connection con=DriverManager.getConnection(url);
+     //Statement st=con.createStatement();
+   // System.out.println("succesful");
+    
+    
+//}catch(Exception ex){
+
+//System.out.println(" Not succesful");
+//}
+
+    public Connection getConn() {
+        return conn;
+    }
+
+    public void setConn(Connection conn) {
+        this.conn = conn;
+    }
+
+   
+
+   
+
+    public ResultSet getRs() {
+        return rs;
+    }
+
+    public void setRs(ResultSet rs) {
+        this.rs = rs;
+    }
         
     }
     
-}
+//}

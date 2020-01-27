@@ -26,13 +26,19 @@ public class player {
     
     //PreparedStatment ps=con.PrepareStatement("");
     public player() {
-         id=0;
-   name=null;
+    id=0;
+    name=null;
     score=0;
     gamecountVsComputer=0;
     gamecountVsPlayer=0 ; 
         
         
+    }
+    boolean pushPlayerToDB(con){
+    
+    create
+    
+    
     }
 
     public player(ResultSet rs) throws SQLException {
