@@ -33,7 +33,7 @@ public class Database{
     
     }
     public Database (String sql) {
-        rs= conn.getState().excutetQuary();
+        rs= conn.getStat().excutetQuary();
         
     
     
@@ -43,11 +43,19 @@ public class Database{
     
     }
 
+    public Statement getStat() {
+        return stat;
+    }
+
+    public void setStat(Statement stat) {
+        this.stat = stat;
+    }
+
         
         
         
         
-        
+       
         
         
         

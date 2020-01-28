@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -23,6 +24,9 @@ public class player {
   //  String sql="Select * from player";
   //  pst=con.prepareStatment(sql);
   //  rs=pst.executeQuery();
+     Connection conn = null;	
+    Statement stat = null; //to make quary
+    ResultSet rs =null; //to save resalt
     
     //PreparedStatment ps=con.PrepareStatement("");
     public player() {
@@ -34,9 +38,11 @@ public class player {
         
         
     }
-    boolean pushPlayerToDB(con){
+  
+    boolean pushPlayerToDB(Connection conn){
     
-    create
+        String sql = "INSERT INTO player VALUES (0, value2, value3, ...)";
+        return false;
     
     
     }
