@@ -1,0 +1,68 @@
+.button1
+{
+    -fx-background-color: #3D97D3;
+    -fx-background-radius: 24;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
+.button1:hover
+{
+    -fx-background-color: white;
+    -fx-border-color: #3D97D3;
+    -fx-text-fill: #3D97D3;
+    -fx-border-width: 3;
+    -fx-border-radius: 24;
+    
+}
+
+.button1:pressed
+{
+    -fx-background-color: white;
+    -fx-border-color: #3D97D3;
+    -fx-text-fill: #3D97D3;
+    -fx-border-width: 3;
+    -fx-border-radius: 24;
+    -fx-rotate:7;   
+}
+
+
+
+.button2
+{
+    -fx-background-color: #6D6E71;
+    -fx-background-radius: 24;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
+.button2:hover
+{
+    -fx-background-color: white;
+    -fx-border-color: #6D6E71;
+    -fx-text-fill: #6D6E71;
+    -fx-border-width: 3;
+    -fx-border-radius: 24;
+    
+    
+}
+
+.button2:pressed
+{
+    -fx-background-color: white;
+    -fx-border-color: #6D6E71;
+    -fx-text-fill: #6D6E71;
+    -fx-border-width: 3;
+    -fx-border-radius: 24;
+    -fx-rotate:7;
+    
+}
+
+.textInput
+{
+    -fx-border-color: #3D97D3;
+    -fx-border-width: 5;
+    -fx-border-radius: 24;
+    -fx-background-color: white;
+ }
+ 

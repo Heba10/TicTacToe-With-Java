@@ -16,29 +16,28 @@ have methods:
     -setSymbol(char c) -> assign c to symbol
     -getSymbol()-> return current symbol
     -getMoves() -> return current moves count
-    
-    
-    
-
 */
 public class GameLogic
 {
     
-    char[][] gameBoard;
+    BoardPostion[][] gameBoard;
+    BoardPostion[] winPostions;
     char symbol;
     int moves;
+    boolean isWin=false;
 
     public GameLogic() // constructor
     {
         symbol='X';
         moves=0;
-        gameBoard=new char[3][3];
+        gameBoard=new BoardPostion[3][3];
+        winPostions=new BoardPostion[3];
         for(int i=0;i<3;i++) // initialize gameBoard with -
         {
             
             for(int j=0;j<3;j++)
             {
-                gameBoard[i][j]='-';
+                gameBoard[i][j]=new BoardPostion(i,j,'-');
             }
            
         }
@@ -46,101 +45,117 @@ public class GameLogic
     public GameLogic(char c)//if the player choose he want to start with 'O'
     {
         symbol=c;
-        gameBoard=new char[3][3];
+        System.out.println("symbol "+symbol);
+         gameBoard=new BoardPostion[3][3];
         moves=0;
+        winPostions=new BoardPostion[3];
         for(int i=0;i<3;i++) // initialize gameBoard with -
         {
             
             for(int j=0;j<3;j++)
             {
-                gameBoard[i][j]='-';
+                gameBoard[i][j]=new BoardPostion(i,j,'-');
             }
            
         }
     }
     
-    void printBoard()
+   public void printBoard()
     {
         for(int i=0;i<3;i++)
         {
             System.out.print("|");
             for(int j=0;j<3;j++)
             {
-                System.out.print(gameBoard[i][j]+"|");
+                System.out.print(gameBoard[i][j].value+"|");
             }
             System.out.println("");
         }
     }
-    void changeSymbol()
+   public void changeSymbol()
     {
         if(symbol=='X') symbol='O';
         else symbol='X';
     }
     
-    void resetBoard()
+   public void resetBoard()
     {
         for(int i=0;i<3;i++)
         {
            
             for(int j=0;j<3;j++)
             {
-                gameBoard[i][j]='-';
+                gameBoard[i][j].value='-';
+               
             }
            
         }
     }
     
-    boolean checkForWin()
+   public boolean checkForWin()
     {
         
         return checkColumns()||checkCross()||checkRows();
         
     }
     
-    boolean checkRows()
+   public boolean checkRows()
     {
         boolean retval=false;
         for(int i=0;i<3;i++)
         {
-            if(gameBoard[i][0]==gameBoard[i][1]&&gameBoard[i][1]==gameBoard[i][2]&&(gameBoard[i][2]=='O'||gameBoard[i][2]=='X'))
+            if(gameBoard[i][0].getValue()==gameBoard[i][1].getValue()&&gameBoard[i][1].getValue()==gameBoard[i][2].getValue()&&(gameBoard[i][2].getValue()=='O'||gameBoard[i][2].getValue()=='X'))
             {
+                winPostions[0]=gameBoard[i][0];
+                winPostions[1]=gameBoard[i][1];
+                winPostions[2]=gameBoard[i][2];
+ 
                retval=true;
             }
         }
         return retval;
     }
     
-     boolean checkColumns()
+  public   boolean checkColumns()
     {
         boolean retval=false;
         for(int i=0;i<3;i++)
         {
-            if(gameBoard[0][i]==gameBoard[1][i]&&gameBoard[1][i]==gameBoard[2][i]&&(gameBoard[2][i]=='O'||gameBoard[2][i]=='X'))
+            if(gameBoard[0][i].getValue()==gameBoard[1][i].getValue()&&gameBoard[1][i].getValue()==gameBoard[2][i].getValue()&&(gameBoard[2][i].getValue()=='O'||gameBoard[2][i].getValue()=='X'))
             {
+                 winPostions[0]=gameBoard[0][i];
+                winPostions[1]=gameBoard[1][i];
+                winPostions[2]=gameBoard[2][i];
                retval=true;
             }
         }
         return retval;
     }
      
-     boolean checkCross()
+   public  boolean checkCross()
      {
          boolean retval=false;
         for(int i=0;i<3;i++)
         {
-            if(gameBoard[0][0]==gameBoard[1][1]&&gameBoard[1][1]==gameBoard[2][2]&&(gameBoard[2][2]=='O'||gameBoard[2][2]=='X'))
+            if(gameBoard[0][0].getValue()==gameBoard[1][1].getValue()&&gameBoard[1][1].getValue()==gameBoard[2][2].getValue()&&(gameBoard[2][2].getValue()=='O'||gameBoard[2][2].getValue()=='X'))
             {
                retval=true;
+                winPostions[0]=gameBoard[0][0];
+                winPostions[1]=gameBoard[1][1];
+                winPostions[2]=gameBoard[2][2];
             }
-            else if(gameBoard[0][2]==gameBoard[1][1]&&gameBoard[1][1]==gameBoard[2][0]&&(gameBoard[2][0]=='O'||gameBoard[2][0]=='X'))//0 2 , 1 1 , 2 0
+            else if(gameBoard[0][2].getValue()==gameBoard[1][1].getValue()&&gameBoard[1][1].getValue()==gameBoard[2][0].getValue()&&(gameBoard[2][0].getValue()=='O'||gameBoard[2][0].getValue()=='X'))//0 2 , 1 1 , 2 0
             {
+                 winPostions[0]=gameBoard[0][2];
+                winPostions[1]=gameBoard[1][1];
+                winPostions[2]=gameBoard[2][0];
                 retval=true;
             }
         }
         return retval;
      }
      
-     void setSymbol(char c)
+    public void setSymbol(char c)
      {
          symbol='c';
      }
@@ -150,33 +165,65 @@ public class GameLogic
         return symbol;
     }
     
-    boolean playMove(int x, int y)
+    public boolean playMove(int x, int y)
     {
         boolean retval=false;
-        if(x<3&&y<3&&gameBoard[x][y]=='-')
+        if(x<3&&y<3&&gameBoard[x][y].getValue()=='-')
         {
-             gameBoard[x][y]=symbol;
+            
+                
+             gameBoard[x][y].setValue(symbol);
              retval=true;
              changeSymbol();
              moves++;
+             if(moves>4)
+             if(checkForWin()) isWin=true;
         }
         return retval;
     }
     
     
     
-    boolean isFill()
+    public boolean isFill()
     {
         return moves==9;
     }
+
+    public boolean isWin() {
+        return isWin;
+    }
+    
 
     public int getMoves() 
     {
         return moves;
     }
-    
-    
-    
+    public BoardPostion getPos(int x,int y)
+    {
+        return gameBoard[x][y];
+    }
+    public BoardPostion computerMove()
+    {
+        
+        int x,y;
+        do {    
+             x=(int) (Math.random()*3);
+             y=(int)(Math.random()*3);
+            
+        } while (!playMove(x, y));
+        
+        
+//        System.out.println(gameBoard[x][y].getX()+" "+gameBoard[x][y].getY()+" "+gameBoard[x][y].getValue());
+        return gameBoard[x][y];
+    }
+
+    public BoardPostion[][] getGameBoard() {
+        return gameBoard;
+    }
+
+    public BoardPostion[] getWinPostions() {
+        return winPostions;
+    }
     
 }
 
