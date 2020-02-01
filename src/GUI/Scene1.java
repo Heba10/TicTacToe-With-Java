@@ -1,4 +1,4 @@
-package tictactoe;
+package GUI;
 
 import java.awt.Color;
 import javafx.geometry.Pos;

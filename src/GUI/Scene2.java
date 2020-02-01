@@ -1,4 +1,4 @@
-package tictactoe;
+package GUI;
 
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;

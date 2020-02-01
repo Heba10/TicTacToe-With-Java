@@ -1,15 +1,25 @@
-package tictactoe;
+package GUI;
 
+import GameLogic.BoardPostion;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 public class Game extends Pane {
-
+    
+    protected Label labelX;
+    protected Label labelO;
+    protected Label labelD;
+    
     protected final ImageView imageView;
     protected final Button btn20;
     protected final ImageView view20;
@@ -38,8 +48,13 @@ public class Game extends Pane {
     protected final ImageView ivSave;
     protected final Button backbtn;
     protected final ImageView backbtnImage;
-    protected final Button[][] arrBtn;
-    protected final ImageView imageX;
+    protected final ImageView[][] GUIBoard;
+    protected final ImageView imageViewTurn;
+    protected final Image imageX;
+    protected final Image imageO;
+    protected  BoardPostion [] winPostions;
+    
+    
     
     protected  int count = 0;
     protected  void checkAndAdd(){
@@ -55,7 +70,10 @@ public class Game extends Pane {
     
     };
     public Game() {
-       
+
+        labelX = new Label();
+        labelO = new Label();
+        labelD = new Label();
         
         imageView = new ImageView();
         btn20 = new Button();
@@ -85,22 +103,28 @@ public class Game extends Pane {
         backbtnImage = new ImageView();
         btnSave = new Button();
         ivSave = new ImageView();
-        imageX = new ImageView();
+        imageViewTurn = new ImageView();
+        imageX=new Image(getClass().getResource("images/x.png").toExternalForm());
+        imageO=new Image(getClass().getResource("images/O.png").toExternalForm());
+//        
+        System.out.println(imageX.getWidth());
+       
+        
         
        
     //Array Of Buttons        
-        arrBtn = new Button[3][3];
-        arrBtn[0][0] = btn00;
-        arrBtn[0][1] = btn01;
-        arrBtn[0][2] = btn02;
-        arrBtn[1][0] = btn10;
-        arrBtn[1][1] = btn11;
-        arrBtn[1][2] = btn12;
-        arrBtn[2][0] = btn20;
-        arrBtn[2][1] = btn21;
-        arrBtn[2][2] = btn22;
+        GUIBoard = new ImageView[3][3];
+        GUIBoard[0][0] = view00;
+        GUIBoard[0][1] = view01;
+        GUIBoard[0][2] = view02;
+        GUIBoard[1][0] = view10;
+        GUIBoard[1][1] = view11;
+        GUIBoard[1][2] = view12;
+        GUIBoard[2][0] = view20;
+        GUIBoard[2][1] = view21;
+        GUIBoard[2][2] = view22;
         /////////
-        imageX.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
+//        imageViewTurn.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
         
 
         setMaxHeight(USE_PREF_SIZE);
@@ -310,25 +334,40 @@ public class Game extends Pane {
         btnSave.setGraphic(ivSave);
         
         
+        labelX.setLayoutX(60.0);
+        labelX.setLayoutY(170.0);
+        labelX.setText("X is here");
+        
+        
+        labelO.setLayoutX(60.0);
+        labelO.setLayoutY(290.0);
+        labelO.setText("O is here");
+        
+        
+        
+        labelD.setLayoutX(60.0);
+        labelD.setLayoutY(400.0);
+        labelD.setText("D is here");
+        
         //looooooggggggiiiic Hereeeeeeeee
         
         //set X and O
-            arrBtn[0][0].setOnAction(e ->{
-                view00.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
-                checkAndAdd();
-                
-            });
-            
-            
-            arrBtn[0][1].setOnAction(e ->{
-                view01.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
-                checkAndAdd();
-            });
-            
-            arrBtn[0][2].setOnAction(e ->{
-                view02.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
-                checkAndAdd();
-            });
+//            GUIBoard[0][0].setOnAction(e ->{
+//                view00.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
+//                //checkAndAdd();
+//                
+//            });
+//            
+//            
+//            GUIBoard[0][1].setOnAction(e ->{
+//                view01.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
+//                checkAndAdd();
+//            });
+//            
+//            GUIBoard[0][2].setOnAction(e ->{
+//                view02.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
+//                checkAndAdd();
+//            });
             
           
          
@@ -373,6 +412,18 @@ public class Game extends Pane {
         getChildren().add(btnSave);
         getChildren().add(ivRecord);
         getChildren().add(backbtn);
+        getChildren().add(labelX);
+        getChildren().add(labelO);
+        getChildren().add(labelD);
 
+        
     }
+    
+    
+    
+    
+        
+        
+         
+     
 }

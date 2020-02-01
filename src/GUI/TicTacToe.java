@@ -3,12 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tictactoe;
+package GUI;
 
+//import com.sun.org.glassfish.gmbal.GmbalMBean;
+import GameLogic.BoardPostion;
+import GameLogic.GameLogic;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -16,6 +27,9 @@ import javafx.stage.Stage;
  * @author Ali Gomaa
  */
 public class TicTacToe extends Application {
+    Game game;
+    char startSymbol;
+    
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -40,7 +54,7 @@ public class TicTacToe extends Application {
         CreateGame CG = new CreateGame();
         Scene CreateGameSC = new Scene(CG);
         
-        Game game = new Game();
+        game = new Game();
         Scene gm = new Scene(game);
         
         Records records = new Records();
@@ -127,10 +141,14 @@ public class TicTacToe extends Application {
         //choose x or o scene buttons handeling
             choose.btnX.setOnAction(e -> {
                 stage.setScene(gm);
+                startSymbol='X';
+                new GameBuilder();
             });
        
             choose.btnO.setOnAction(e -> {
                 stage.setScene(gm);
+                startSymbol='O';
+                new GameBuilder();
             });
             
         ///////////////////
@@ -192,5 +210,152 @@ public class TicTacToe extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    
+    
+    class GameBuilder
+    {
+        GameLogic gameLogic;
+
+        public GameBuilder()
+        {
+            gameLogic=new GameLogic(startSymbol);
+            if(startSymbol=='o')game.imageViewTurn.setImage(game.imageO);
+            else game.imageViewTurn.setImage(game.imageX);
+            game.btn00.setOnAction(new EventHandel(0,0,game.view00));
+            game.btn01.setOnAction(new EventHandel(0,1,game.view01));
+             game.btn02.setOnAction(new EventHandel(0,2, game.view02));
+             game.btn10.setOnAction(new EventHandel(1,0, game.view10));
+             game.btn11.setOnAction(new EventHandel(1, 1, game. view11));
+             game.btn12.setOnAction(new EventHandel(1, 2, game. view12));
+             game.btn20.setOnAction(new EventHandel(2, 0,  game.view20));
+             game.btn21.setOnAction(new EventHandel(2, 1, game. view21));
+             game.btn22.setOnAction(new EventHandel(2, 2,  game.view22));
+            
+        }
+        
+     class EventHandel implements EventHandler<ActionEvent>
+     {
+         int x,y;
+         
+         ImageView imageView;
+        public EventHandel(int x,int y,ImageView imageView)
+        {
+            this.x=x;
+            this.y=y;
+            
+            this.imageView=imageView;
+        }
+
+        @Override
+        public void handle(ActionEvent event)
+        {
+            
+            if(!gameLogic.isFill()&&gameLogic.getPos(x, y).getValue()=='-')
+             {
+                 if(!gameLogic.isWin())
+                 {
+                     System.out.println(gameLogic.getSymbol());
+                     if(gameLogic.playMove(x, y))
+                     {
+                         
+//                         button.setText(String.valueOf(gameLogic.getPos(x,y).getValue()));
+                         if(gameLogic.getPos(x, y).getValue()=='X')
+                         imageView.setImage(game.imageX);
+                         else
+                             imageView.setImage(game.imageO);
+                     }
+                     if(gameLogic.isWin())
+                     {
+//                         winLabel.setText("player win");
+                         highlightWin(Color.GREEN,gameLogic);
+//                         disableAllBtns();
+                     }
+                     else
+                     {
+                          drawComputerMove();
+                          
+                     }  
+                 }
+             }
+            if(gameLogic.isFill()&&!gameLogic.isWin())
+            
+            {
+//                winLabel.setText("draw");
+            }
+        }
+        
+     public void highlightWin(Color c,GameLogic gLogic)
+     {
+         game.winPostions =gLogic.getWinPostions();
+         for (int i = 0; i < 3; i++)
+         {
+             
+          int x=game.winPostions[i].getX();
+          int y=game.winPostions[i].getY();
+//          game.GUIBoard[x][y].setBackground(new Background(new BackgroundFill(c, CornerRadii.EMPTY, Insets.EMPTY)));
+         }
+     }
+     
+     
+     void drawComputerMove()
+     {
+        BoardPostion computerPos=gameLogic.computerMove();
+        int x=computerPos.getX();
+        int y=computerPos.getY();
+        System.out.println("now comp turn"+x+" "+y+" "+gameLogic.getPos(x, y).getValue());
+        if(gameLogic.getPos(x, y).getValue()=='X')
+           game.GUIBoard[x][y].setImage(game.imageX);
+         else
+           game.GUIBoard[x][y].setImage(game.imageO);
+        gameLogic.printBoard();
+//        game.GUIBoard[x][y].setText(String.valueOf(gameLogic.getPos(x, y).getValue()));
+        if(gameLogic.isWin())
+        {
+//            winLabel.setText("computer win");
+//            disableAllBtns();
+            highlightWin(Color.RED,gameLogic);
+        }
+     }
+        
+    }
+    }
+    
+    class VsComputer extends GameBuilder
+    {
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   
+    
+    
+    
+    
+    
+    
+    
     
 }
