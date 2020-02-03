@@ -124,7 +124,7 @@ public class TicTacToe extends Application {
                  pvpGame = new Game();
                 Scene pvpGameScene = new Scene(pvpGame);
                 System.out.println("pvp");
-                //new VsLocalPlayerBuilder();
+                new VsLocalPlayerBuilder();
                 
                 
                 pvpGame.backbtn.setOnAction(event -> {
@@ -334,9 +334,7 @@ public class TicTacToe extends Application {
                            
                      }
                  }
-<<<<<<< HEAD
                 
-=======
              
             
                 if(gameLogic.isFill()&&!gameLogic.isWin())
@@ -344,7 +342,6 @@ public class TicTacToe extends Application {
                 {
      //                winLabel.setText("draw");
                 }
->>>>>>> e37014150ed7456e59792116c7ea65750e2ccbad
             }
 
             public void highlightWin(Color c,GameLogic gLogic)
@@ -385,7 +382,11 @@ public class TicTacToe extends Application {
         
     }
     
-    class VsLocalPlayerBuilder 
+   
+    }
+    
+    
+     class VsLocalPlayerBuilder 
     {
         GameLogic gameLogic;
 
@@ -459,7 +460,8 @@ public class TicTacToe extends Application {
         }
         
     }
-    }
+    
+    
 }
     
 //    Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
