@@ -1,4 +1,4 @@
-package tictactoe;
+package GUI;
 
 import java.awt.Color;
 import javafx.geometry.Pos;
@@ -43,7 +43,6 @@ public class Scene1 extends Pane {
         imageView.setPreserveRatio(true);
         imageView.setImage(new Image(getClass().getResource("images/background.png").toExternalForm()));
         
-         
 
         imageView0.setFitHeight(212.0);
         imageView0.setFitWidth(377.0);

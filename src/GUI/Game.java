@@ -1,15 +1,27 @@
-package tictactoe;
+package GUI;
 
+import GameLogic.BoardPostion;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class Game extends Pane {
-
+    
+    protected Label labelX;
+    protected Label labelO;
+    protected Label labelD;
+    protected Label labelTurn;
+    
     protected final ImageView imageView;
     protected final Button btn20;
     protected final ImageView view20;
@@ -38,24 +50,23 @@ public class Game extends Pane {
     protected final ImageView ivSave;
     protected final Button backbtn;
     protected final ImageView backbtnImage;
-    protected final Button[][] arrBtn;
-    protected final ImageView imageX;
+    protected final ImageView[][] GUIBoard;
+    protected final ImageView imageViewTurn;
+    protected final Image imageX;
+    protected final Image imageO;
+    protected  BoardPostion [] winPostions;
     
-    protected  int count = 0;
-    protected  void checkAndAdd(){
-        count++;
-        
-        
-        if(count == 3)
-        {
-            System.out.println("Hellooo");
-            count = 0;
-        }
-        
     
-    };
+
+        
+   
     public Game() {
        
+        labelX = new Label();
+        labelO = new Label();
+        labelD = new Label();
+        labelTurn = new Label();
+
         
         imageView = new ImageView();
         btn20 = new Button();
@@ -85,22 +96,28 @@ public class Game extends Pane {
         backbtnImage = new ImageView();
         btnSave = new Button();
         ivSave = new ImageView();
-        imageX = new ImageView();
+        imageViewTurn = new ImageView();
+        imageX=new Image(getClass().getResource("images/x.png").toExternalForm());
+        imageO=new Image(getClass().getResource("images/O.png").toExternalForm());
+//        
+        System.out.println(imageX.getWidth());
+       
+        
         
        
     //Array Of Buttons        
-        arrBtn = new Button[3][3];
-        arrBtn[0][0] = btn00;
-        arrBtn[0][1] = btn01;
-        arrBtn[0][2] = btn02;
-        arrBtn[1][0] = btn10;
-        arrBtn[1][1] = btn11;
-        arrBtn[1][2] = btn12;
-        arrBtn[2][0] = btn20;
-        arrBtn[2][1] = btn21;
-        arrBtn[2][2] = btn22;
+        GUIBoard = new ImageView[3][3];
+        GUIBoard[0][0] = view00;
+        GUIBoard[0][1] = view01;
+        GUIBoard[0][2] = view02;
+        GUIBoard[1][0] = view10;
+        GUIBoard[1][1] = view11;
+        GUIBoard[1][2] = view12;
+        GUIBoard[2][0] = view20;
+        GUIBoard[2][1] = view21;
+        GUIBoard[2][2] = view22;
         /////////
-        imageX.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
+//        imageViewTurn.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
         
 
         setMaxHeight(USE_PREF_SIZE);
@@ -238,7 +255,7 @@ public class Game extends Pane {
         scoreXiv.setFitHeight(39.0);
         scoreXiv.setFitWidth(107.0);
         scoreXiv.setLayoutX(41.0);
-        scoreXiv.setLayoutY(120.0);
+        scoreXiv.setLayoutY(90.0);
         scoreXiv.setPickOnBounds(true);
         scoreXiv.setPreserveRatio(true);
         scoreXiv.setImage(new Image(getClass().getResource("images/scoreX.png").toExternalForm()));
@@ -246,7 +263,7 @@ public class Game extends Pane {
         scoreOiv.setFitHeight(39.0);
         scoreOiv.setFitWidth(107.0);
         scoreOiv.setLayoutX(41.0);
-        scoreOiv.setLayoutY(237.0);
+        scoreOiv.setLayoutY(180.0);
         scoreOiv.setPickOnBounds(true);
         scoreOiv.setPreserveRatio(true);
         scoreOiv.setImage(new Image(getClass().getResource("images/scoreO.png").toExternalForm()));
@@ -254,13 +271,13 @@ public class Game extends Pane {
         drawsiv.setFitHeight(33.0);
         drawsiv.setFitWidth(72.0);
         drawsiv.setLayoutX(48.0);
-        drawsiv.setLayoutY(354.0);
+        drawsiv.setLayoutY(260.0);
         drawsiv.setPickOnBounds(true);
         drawsiv.setPreserveRatio(true);
         drawsiv.setImage(new Image(getClass().getResource("images/draw.png").toExternalForm()));
 
         btnRecord.setLayoutX(50.0);
-        btnRecord.setLayoutY(450.0);
+        btnRecord.setLayoutY(360.0);
         btnRecord.setMnemonicParsing(false);
         btnRecord.setPrefHeight(49.0);
         btnRecord.setPrefWidth(44.0);
@@ -271,7 +288,7 @@ public class Game extends Pane {
         ivRecord.setFitHeight(73.0);
         ivRecord.setFitWidth(75.0);
         ivRecord.setLayoutX(45.0);
-        ivRecord.setLayoutY(491.0);
+        ivRecord.setLayoutY(340.0);
         ivRecord.setPickOnBounds(true);
         ivRecord.setPreserveRatio(true);
         ivRecord.setImage(new Image(getClass().getResource("images/record.png").toExternalForm()));
@@ -295,7 +312,7 @@ public class Game extends Pane {
         
         
         btnSave.setLayoutX(55.0);
-        btnSave.setLayoutY(520.0);
+        btnSave.setLayoutY(430.0);
         btnSave.setMnemonicParsing(false);
         btnSave.setPrefHeight(50.0);
         btnSave.setPrefWidth(50.0);
@@ -310,25 +327,48 @@ public class Game extends Pane {
         btnSave.setGraphic(ivSave);
         
         
+        labelX.setLayoutX(40.0);
+        labelX.setLayoutY(130.0);
+        labelX.setText("X is here");
+        labelX.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
+        
+        
+        labelO.setLayoutX(40.0);
+        labelO.setLayoutY(220.0);
+        labelO.setText("O is here");
+        labelO.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
+        
+        
+        labelD.setLayoutX(40.0);
+        labelD.setLayoutY(300.0);
+        labelD.setText("D is here");
+        labelD.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
+        
+        
+        labelTurn.setLayoutX(50.0);
+        labelTurn.setLayoutY(560.0);
+        //labelTurn.setText("X Turn");
+        labelTurn.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
+        
         //looooooggggggiiiic Hereeeeeeeee
         
         //set X and O
-            arrBtn[0][0].setOnAction(e ->{
-                view00.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
-                checkAndAdd();
-                
-            });
-            
-            
-            arrBtn[0][1].setOnAction(e ->{
-                view01.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
-                checkAndAdd();
-            });
-            
-            arrBtn[0][2].setOnAction(e ->{
-                view02.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
-                checkAndAdd();
-            });
+//            GUIBoard[0][0].setOnAction(e ->{
+//                view00.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
+//                //checkAndAdd();
+//                
+//            });
+//            
+//            
+//            GUIBoard[0][1].setOnAction(e ->{
+//                view01.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
+//                checkAndAdd();
+//            });
+//            
+//            GUIBoard[0][2].setOnAction(e ->{
+//                view02.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
+//                checkAndAdd();
+//            });
             
           
          
@@ -373,6 +413,20 @@ public class Game extends Pane {
         getChildren().add(btnSave);
         getChildren().add(ivRecord);
         getChildren().add(backbtn);
+        getChildren().add(labelX);
+        getChildren().add(labelO);
+        getChildren().add(labelD);
+        getChildren().add(labelTurn);
 
+
+        
     }
+    
+    
+    
+    
+        
+        
+         
+     
 }
