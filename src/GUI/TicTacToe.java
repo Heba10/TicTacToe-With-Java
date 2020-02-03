@@ -8,6 +8,8 @@ package GUI;
 //import com.sun.org.glassfish.gmbal.GmbalMBean;
 import GameLogic.BoardPostion;
 import GameLogic.GameLogic;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -290,6 +292,7 @@ public class TicTacToe extends Application {
      //                         winLabel.setText("player win");
                              highlightWin(Color.GREEN,gameLogic);
      //                         disableAllBtns();
+                             System.out.println("player win");
                          }
                          else if(gameLogic.isFill())
                          {
@@ -297,16 +300,13 @@ public class TicTacToe extends Application {
                          }
                          else
                          {
+                             
                               drawComputerMove();
 
                          }  
                      }
                  }
-                if(gameLogic.isFill()&&!gameLogic.isWin())
-
-                {
-     //                winLabel.setText("draw");
-                }
+                
             }
 
             public void highlightWin(Color c,GameLogic gLogic)
@@ -414,11 +414,7 @@ public class TicTacToe extends Application {
                           
                      }
                  }
-                if(gameLogic.isFill()&&!gameLogic.isWin())
-
-                {
-     //                winLabel.setText("draw");
-                }
+               
             }
             
         }
