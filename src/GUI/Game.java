@@ -13,12 +13,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class Game extends Pane {
     
     protected Label labelX;
     protected Label labelO;
     protected Label labelD;
+    protected Label labelTurn;
     
     protected final ImageView imageView;
     protected final Button btn20;
@@ -55,25 +57,16 @@ public class Game extends Pane {
     protected  BoardPostion [] winPostions;
     
     
-    
-    protected  int count = 0;
-    protected  void checkAndAdd(){
-        count++;
+
         
-        
-        if(count == 3)
-        {
-            System.out.println("Hellooo");
-            count = 0;
-        }
-        
-    
-    };
+   
     public Game() {
        
         labelX = new Label();
         labelO = new Label();
         labelD = new Label();
+        labelTurn = new Label();
+
         
         imageView = new ImageView();
         btn20 = new Button();
@@ -262,7 +255,7 @@ public class Game extends Pane {
         scoreXiv.setFitHeight(39.0);
         scoreXiv.setFitWidth(107.0);
         scoreXiv.setLayoutX(41.0);
-        scoreXiv.setLayoutY(120.0);
+        scoreXiv.setLayoutY(90.0);
         scoreXiv.setPickOnBounds(true);
         scoreXiv.setPreserveRatio(true);
         scoreXiv.setImage(new Image(getClass().getResource("images/scoreX.png").toExternalForm()));
@@ -270,7 +263,7 @@ public class Game extends Pane {
         scoreOiv.setFitHeight(39.0);
         scoreOiv.setFitWidth(107.0);
         scoreOiv.setLayoutX(41.0);
-        scoreOiv.setLayoutY(237.0);
+        scoreOiv.setLayoutY(180.0);
         scoreOiv.setPickOnBounds(true);
         scoreOiv.setPreserveRatio(true);
         scoreOiv.setImage(new Image(getClass().getResource("images/scoreO.png").toExternalForm()));
@@ -278,13 +271,13 @@ public class Game extends Pane {
         drawsiv.setFitHeight(33.0);
         drawsiv.setFitWidth(72.0);
         drawsiv.setLayoutX(48.0);
-        drawsiv.setLayoutY(354.0);
+        drawsiv.setLayoutY(260.0);
         drawsiv.setPickOnBounds(true);
         drawsiv.setPreserveRatio(true);
         drawsiv.setImage(new Image(getClass().getResource("images/draw.png").toExternalForm()));
 
         btnRecord.setLayoutX(50.0);
-        btnRecord.setLayoutY(450.0);
+        btnRecord.setLayoutY(360.0);
         btnRecord.setMnemonicParsing(false);
         btnRecord.setPrefHeight(49.0);
         btnRecord.setPrefWidth(44.0);
@@ -295,7 +288,7 @@ public class Game extends Pane {
         ivRecord.setFitHeight(73.0);
         ivRecord.setFitWidth(75.0);
         ivRecord.setLayoutX(45.0);
-        ivRecord.setLayoutY(491.0);
+        ivRecord.setLayoutY(340.0);
         ivRecord.setPickOnBounds(true);
         ivRecord.setPreserveRatio(true);
         ivRecord.setImage(new Image(getClass().getResource("images/record.png").toExternalForm()));
@@ -319,7 +312,7 @@ public class Game extends Pane {
         
         
         btnSave.setLayoutX(55.0);
-        btnSave.setLayoutY(520.0);
+        btnSave.setLayoutY(430.0);
         btnSave.setMnemonicParsing(false);
         btnSave.setPrefHeight(50.0);
         btnSave.setPrefWidth(50.0);
@@ -334,20 +327,28 @@ public class Game extends Pane {
         btnSave.setGraphic(ivSave);
         
         
-        labelX.setLayoutX(60.0);
-        labelX.setLayoutY(170.0);
+        labelX.setLayoutX(40.0);
+        labelX.setLayoutY(130.0);
         labelX.setText("X is here");
+        labelX.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
         
         
-        labelO.setLayoutX(60.0);
-        labelO.setLayoutY(290.0);
+        labelO.setLayoutX(40.0);
+        labelO.setLayoutY(220.0);
         labelO.setText("O is here");
+        labelO.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
         
         
-        
-        labelD.setLayoutX(60.0);
-        labelD.setLayoutY(400.0);
+        labelD.setLayoutX(40.0);
+        labelD.setLayoutY(300.0);
         labelD.setText("D is here");
+        labelD.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
+        
+        
+        labelTurn.setLayoutX(50.0);
+        labelTurn.setLayoutY(560.0);
+        //labelTurn.setText("X Turn");
+        labelTurn.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
         
         //looooooggggggiiiic Hereeeeeeeee
         
@@ -415,6 +416,8 @@ public class Game extends Pane {
         getChildren().add(labelX);
         getChildren().add(labelO);
         getChildren().add(labelD);
+        getChildren().add(labelTurn);
+
 
         
     }

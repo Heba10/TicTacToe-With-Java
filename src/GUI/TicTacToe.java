@@ -10,12 +10,16 @@ import GameLogic.BoardPostion;
 import GameLogic.GameLogic;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Optional;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -31,9 +35,7 @@ import javafx.stage.Stage;
 public class TicTacToe extends Application {
     Game game;
     char startSymbol;
-    Game pvpGame;
-    
-    
+    Game pvpGame;    
     @Override
     public void start(Stage stage) throws Exception {
         
@@ -62,6 +64,9 @@ public class TicTacToe extends Application {
         
         Records records = new Records();
         Scene rec = new Scene(records);
+        
+        Spinner spn = new Spinner();
+        Scene spin = new Scene(spn);
         ////////////////////////
 
         
@@ -119,7 +124,7 @@ public class TicTacToe extends Application {
                  pvpGame = new Game();
                 Scene pvpGameScene = new Scene(pvpGame);
                 System.out.println("pvp");
-                new VsLocalPlayerBuilder();
+                //new VsLocalPlayerBuilder();
                 
                 
                 pvpGame.backbtn.setOnAction(event -> {
@@ -157,6 +162,7 @@ public class TicTacToe extends Application {
                 stage.setScene(gm);
                 startSymbol='O';
                 new GameBuilder();
+
             });
             
         ///////////////////
@@ -194,22 +200,35 @@ public class TicTacToe extends Application {
             });
              
              game.backbtn.setOnAction(e -> {  
-                stage.setScene(scStart);
-                stage.show();
-//                new GameBuilder();
-//                game=new Game();
-//                resetGUI();
                 
+                //remove image after click back
+                
+                 Alert a = new Alert(AlertType.CONFIRMATION);
+                
+                 a.setContentText("Are You Sure You Want To Exit ?");
+                 a.setGraphic(null);
+                 a.setHeaderText(null);
+                 
+                 Optional <ButtonType> result = a.showAndWait();
+                 if (result.get() == ButtonType.OK)
+                 {    
+                    stage.setScene(scStart);
+                    stage.show();
+                    
+                    for (int i = 0; i < 3; i++)
+                        for(int j = 0; j < 3 ; j++)
+                        {
+                            game.GUIBoard[i][j].setImage(null);
+                        }
+                 }
+                 
+                 
             });
              
              
+    
              
              
-             
-             
-             
-        
-     
         stage.setTitle("GAMSH Tic Tac Toe");
         stage.setScene(sc1);
         stage.show();
@@ -247,13 +266,13 @@ public class TicTacToe extends Application {
             else game.imageViewTurn.setImage(game.imageX);
             game.btn00.setOnAction(new EventHandel(0,0,game.view00));
             game.btn01.setOnAction(new EventHandel(0,1,game.view01));
-             game.btn02.setOnAction(new EventHandel(0,2, game.view02));
-             game.btn10.setOnAction(new EventHandel(1,0, game.view10));
-             game.btn11.setOnAction(new EventHandel(1, 1, game. view11));
-             game.btn12.setOnAction(new EventHandel(1, 2, game. view12));
-             game.btn20.setOnAction(new EventHandel(2, 0,  game.view20));
-             game.btn21.setOnAction(new EventHandel(2, 1, game. view21));
-             game.btn22.setOnAction(new EventHandel(2, 2,  game.view22));
+            game.btn02.setOnAction(new EventHandel(0,2, game.view02));
+            game.btn10.setOnAction(new EventHandel(1,0, game.view10));
+            game.btn11.setOnAction(new EventHandel(1, 1, game. view11));
+            game.btn12.setOnAction(new EventHandel(1, 2, game. view12));
+            game.btn20.setOnAction(new EventHandel(2, 0,  game.view20));
+            game.btn21.setOnAction(new EventHandel(2, 1, game. view21));
+            game.btn22.setOnAction(new EventHandel(2, 2,  game.view22));
             
         }
         
@@ -303,10 +322,29 @@ public class TicTacToe extends Application {
                              
                               drawComputerMove();
 
-                         }  
+                         
+                         }
+//                             imageView.setImage(game.imageO);
+                     }
+                     if(gameLogic.isWin())
+                     {
+//                         winLabel.setText("player win");
+                            highlightWin(Color.GREEN,gameLogic);
+//                         disableAllBtns();
+                           
                      }
                  }
+<<<<<<< HEAD
                 
+=======
+             
+            
+                if(gameLogic.isFill()&&!gameLogic.isWin())
+
+                {
+     //                winLabel.setText("draw");
+                }
+>>>>>>> e37014150ed7456e59792116c7ea65750e2ccbad
             }
 
             public void highlightWin(Color c,GameLogic gLogic)
@@ -340,9 +378,10 @@ public class TicTacToe extends Application {
    //            disableAllBtns();
                highlightWin(Color.RED,gameLogic);
            }
-        }
-
-       }
+        
+        
+        game.labelTurn.setText("X Turn");
+     }
         
     }
     
@@ -420,5 +459,18 @@ public class TicTacToe extends Application {
         }
         
     }
-       
+    }
 }
+    
+//    Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
+//
+//    @Override
+//    public void handle(ActionEvent event) {
+//        System.out.println("this is called every 5 seconds on UI thread");
+//    }
+//}));
+//fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
+//fiveSecondsWonder.play();
+     
+    
+
