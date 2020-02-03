@@ -33,8 +33,7 @@ import javafx.stage.Stage;
 public class TicTacToe extends Application {
     Game game;
     char startSymbol;
-    
-    
+    Game pvpGame;    
     @Override
     public void start(Stage stage) throws Exception {
         
@@ -59,7 +58,7 @@ public class TicTacToe extends Application {
         Scene CreateGameSC = new Scene(CG);
         
         game = new Game();
-        Scene gm = new Scene(game);
+        
         
         Records records = new Records();
         Scene rec = new Scene(records);
@@ -120,8 +119,10 @@ public class TicTacToe extends Application {
         //pvp section
             //at player vs player when on click start choose x or o
             pvp.button.setOnAction(e -> {
-                Game pvpGame = new Game();
+                 pvpGame = new Game();
                 Scene pvpGameScene = new Scene(pvpGame);
+                System.out.println("pvp");
+                //new VsLocalPlayerBuilder();
                 
                 
                 pvpGame.backbtn.setOnAction(event -> {
@@ -147,12 +148,15 @@ public class TicTacToe extends Application {
             
         //choose x or o scene buttons handeling
             choose.btnX.setOnAction(e -> {
+                Scene gm = new Scene(game);
                 stage.setScene(gm);
+//                game = new Game();
                 startSymbol='X';
                 new GameBuilder();
             });
        
             choose.btnO.setOnAction(e -> {
+                Scene gm = new Scene(game);
                 stage.setScene(gm);
                 startSymbol='O';
                 new GameBuilder();
@@ -236,6 +240,17 @@ public class TicTacToe extends Application {
         launch(args);
     }
     
+    public void resetGUI()
+    {
+        for(int i=0; i<3; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                game.GUIBoard[i][j].imageProperty().set(null);
+            }
+        }
+        
+    }
     
     class GameBuilder
     {
@@ -244,6 +259,7 @@ public class TicTacToe extends Application {
         public GameBuilder()
         {
             gameLogic=new GameLogic(startSymbol);
+            
             if(startSymbol=='o')game.imageViewTurn.setImage(game.imageO);
             else game.imageViewTurn.setImage(game.imageX);
             game.btn00.setOnAction(new EventHandel(0,0,game.view00));
@@ -258,98 +274,190 @@ public class TicTacToe extends Application {
             
         }
         
-     class EventHandel implements EventHandler<ActionEvent>
-     {
-         int x,y;
-         
-         ImageView imageView;
-        public EventHandel(int x,int y,ImageView imageView)
-        {
-            this.x=x;
-            this.y=y;
-            
-            this.imageView=imageView;
-        }
+       class EventHandel implements EventHandler<ActionEvent>
+       {
+            protected int x,y;
 
-        @Override
-        public void handle(ActionEvent event)
-        {
-            
-            if(!gameLogic.isFill()&&gameLogic.getPos(x, y).getValue()=='-')
-             {
-                 if(!gameLogic.isWin())
+            ImageView imageView;
+            public EventHandel(int x,int y,ImageView imageView)
+            {
+                this.x=x;
+                this.y=y;
+                this.imageView=imageView;
+            }
+
+            @Override
+            public void handle(ActionEvent event)
+            {
+
+                if(!gameLogic.isFill()&&gameLogic.getPos(x, y).getValue()=='-')
                  {
-                     System.out.println(gameLogic.getSymbol());
-                     if(gameLogic.playMove(x, y))
+                     if(!gameLogic.isWin())
                      {
-                         
-//                         button.setText(String.valueOf(gameLogic.getPos(x,y).getValue()));
-                         if(gameLogic.getPos(x, y).getValue()=='X')
-                         imageView.setImage(game.imageX);
+                         System.out.println(gameLogic.getSymbol());
+                         if(gameLogic.playMove(x, y))
+                         {
+
+     //                         button.setText(String.valueOf(gameLogic.getPos(x,y).getValue()));
+                             if(gameLogic.getPos(x, y).getValue()=='X')
+                             imageView.setImage(game.imageX);
+                             else
+                                 imageView.setImage(game.imageO);
+                         }
+                         if(gameLogic.isWin())
+                         {
+     //                         winLabel.setText("player win");
+                             highlightWin(Color.GREEN,gameLogic);
+     //                         disableAllBtns();
+                         }
+                         else if(gameLogic.isFill())
+                         {
+                             System.out.println("draw");
+                         }
                          else
-                             imageView.setImage(game.imageO);
+                         {
+                             
+                              drawComputerMove();
+
+                         
+                         }
+//                             imageView.setImage(game.imageO);
                      }
                      if(gameLogic.isWin())
                      {
 //                         winLabel.setText("player win");
                             highlightWin(Color.GREEN,gameLogic);
 //                         disableAllBtns();
+                           
                      }
-                     else
-                     {
-                          drawComputerMove();
-                          
-                     }  
                  }
-             }
-            if(gameLogic.isFill()&&!gameLogic.isWin())
-            {
-//                winLabel.setText("draw");
-            }
-        }
-        
-     public void highlightWin(Color c,GameLogic gLogic)
-     {
-         game.winPostions =gLogic.getWinPostions();
-         for (int i = 0; i < 3; i++)
-         {
              
-          int x=game.winPostions[i].getX();
-          int y=game.winPostions[i].getY();
-//          game.GUIBoard[x][y].setBackground(new Background(new BackgroundFill(c, CornerRadii.EMPTY, Insets.EMPTY)));
-         }
-     }
-     
-     
-     void drawComputerMove()
-     {
-        BoardPostion computerPos=gameLogic.computerMove();
-        int x=computerPos.getX();
-        int y=computerPos.getY();
-        System.out.println("now comp turn"+x+" "+y+" "+gameLogic.getPos(x, y).getValue());
-        if(gameLogic.getPos(x, y).getValue()=='X')
-           game.GUIBoard[x][y].setImage(game.imageX);
-         else
-           game.GUIBoard[x][y].setImage(game.imageO);
-        gameLogic.printBoard();
-//        game.GUIBoard[x][y].setText(String.valueOf(gameLogic.getPos(x, y).getValue()));
-        if(gameLogic.isWin())
+            
+                if(gameLogic.isFill()&&!gameLogic.isWin())
+
+                {
+     //                winLabel.setText("draw");
+                }
+            }
+
+            public void highlightWin(Color c,GameLogic gLogic)
+            {
+                game.winPostions =gLogic.getWinPostions();
+                for (int i = 0; i < 3; i++)
+                {
+
+                 int x=game.winPostions[i].getX();
+                 int y=game.winPostions[i].getY();
+       //          game.GUIBoard[x][y].setBackground(new Background(new BackgroundFill(c, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
+            }
+
+
+        void drawComputerMove()
         {
-//            winLabel.setText("computer win");
-//            disableAllBtns();
-            highlightWin(Color.RED,gameLogic);
-        }
+           BoardPostion computerPos=gameLogic.computerMove();
+           int x=computerPos.getX();
+           int y=computerPos.getY();
+           System.out.println("now comp turn"+x+" "+y+" "+gameLogic.getPos(x, y).getValue());
+           if(gameLogic.getPos(x, y).getValue()=='X')
+              game.GUIBoard[x][y].setImage(game.imageX);
+            else
+              game.GUIBoard[x][y].setImage(game.imageO);
+           gameLogic.printBoard();
+   //        game.GUIBoard[x][y].setText(String.valueOf(gameLogic.getPos(x, y).getValue()));
+           if(gameLogic.isWin())
+           {
+               System.out.println("computer win");
+   //            disableAllBtns();
+               highlightWin(Color.RED,gameLogic);
+           }
+        
         
         game.labelTurn.setText("X Turn");
      }
         
     }
-    }
     
-    class VsComputer extends GameBuilder
+    class VsLocalPlayerBuilder 
     {
+        GameLogic gameLogic;
+
+        public VsLocalPlayerBuilder()
+        {
+            gameLogic=new GameLogic();
+            
+            if(startSymbol=='o')pvpGame.imageViewTurn.setImage(game.imageO);
+            else pvpGame.imageViewTurn.setImage(game.imageX);
+            
+            
+            
+            pvpGame.btn00.setOnAction(new EventHandleVslocal(0,0,pvpGame.view00));
+            pvpGame.btn01.setOnAction(new EventHandleVslocal(0,1,pvpGame.view01));
+             pvpGame.btn02.setOnAction(new EventHandleVslocal(0,2, pvpGame.view02));
+             pvpGame.btn10.setOnAction(new EventHandleVslocal(1,0, pvpGame.view10));
+             pvpGame.btn11.setOnAction(new EventHandleVslocal(1, 1, pvpGame. view11));
+             pvpGame.btn12.setOnAction(new EventHandleVslocal(1, 2, pvpGame. view12));
+             pvpGame.btn20.setOnAction(new EventHandleVslocal(2, 0,  pvpGame.view20));
+             pvpGame.btn21.setOnAction(new EventHandleVslocal(2, 1, pvpGame. view21));
+             pvpGame.btn22.setOnAction(new EventHandleVslocal(2, 2,  pvpGame.view22));
+            
+        }
+        
+        
+
+        class EventHandleVslocal implements EventHandler<ActionEvent>
+        {
+            
+            protected int x,y;
+
+            ImageView imageView;
+            public EventHandleVslocal(int x,int y,ImageView imageView)
+            {
+                this.x=x;
+                this.y=y;
+                this.imageView=imageView;
+            }
+
+             @Override
+            public void handle(ActionEvent event)
+            {
+
+                if(!gameLogic.isFill()&&gameLogic.getPos(x, y).getValue()=='-')
+                 {
+                     if(!gameLogic.isWin())
+                     {
+                         System.out.println(gameLogic.getSymbol());
+                         if(gameLogic.playMove(x, y))
+                         {
+
+     //                         button.setText(String.valueOf(gameLogic.getPos(x,y).getValue()));
+                             if(gameLogic.getPos(x, y).getValue()=='X')
+                             imageView.setImage(game.imageX);
+                             else
+                                 imageView.setImage(game.imageO);
+                         }
+                         if(gameLogic.isWin())
+                         {
+                             System.out.println("winner");
+     //                         winLabel.setText("player win");
+//                             highlightWin(Color.GREEN,gameLogic);
+     //                         disableAllBtns();
+                         }
+                          
+                     }
+                 }
+                if(gameLogic.isFill()&&!gameLogic.isWin())
+
+                {
+     //                winLabel.setText("draw");
+                }
+            }
+            
+        }
         
     }
+    }
+}
     
 //    Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
 //
@@ -360,38 +468,6 @@ public class TicTacToe extends Application {
 //}));
 //fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
 //fiveSecondsWonder.play();
+     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-   
-    
-    
-    
-    
-    
-    
-    
-    
-}
+
