@@ -279,20 +279,20 @@ public class DB {
         
 //    }
     
-    public static void main(String[] args) throws SQLException {
-        DB db= new DB();
-        Vector<GameData> v=db.getAllRecords();
-        for(GameData game : v)
-        {   System.out.println(game.getId());
-            for(BoardPostion pos: game.getGameMoves().getMoves())
-            {
-                System.out.println("x= "+pos.getX()+" y="+pos.getY());
-            }
-        }
+//    public static void main(String[] args) throws SQLException {
+//        DB db= new DB();
+//        Vector<GameData> v=db.getAllRecords();
+//        for(GameData game : v)
+//        {   System.out.println(game.getId());
+//            for(BoardPostion pos: game.getGameMoves().getMoves())
+//            {
+//                System.out.println("x= "+pos.getX()+" y="+pos.getY());
+//            }
+//        }
         
         
         
-    }
+//    }
     
     
         
