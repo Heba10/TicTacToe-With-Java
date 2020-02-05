@@ -29,6 +29,7 @@ public class DB {
             con= DriverManager.getConnection("jdbc:sqlite:test.db");
             System.out.println("connection sucess");
             st=con.createStatement();
+            pst=con.prepareStatement("select * from GameData");
             
         }
         
@@ -118,7 +119,7 @@ public class DB {
         pst.setInt(3,player.getGameCountVsComputer());
         pst.setInt(4, player.getGameCountVsPlayer());
         pst.execute();
-        con.close();
+//        con.close();
     }
     
     public PlayerData getPlayer(String name) throws SQLException
@@ -126,7 +127,9 @@ public class DB {
         establishConnection();
         sql="select * from PlayerData where name='"+name+"'";
         rs=st.executeQuery(sql);
-        return new PlayerData(rs);
+        if(rs!=null)
+            return new PlayerData(rs);
+        else return null;
     }
     
     public void PushGame(GameData game) throws SQLException
@@ -146,7 +149,7 @@ public class DB {
             pushGameMoves(game.getGameMoves(), game.getId());
         }
         
-        con.close();
+//        con.close();
         
     }
     
@@ -163,7 +166,7 @@ public class DB {
             pst.execute();
             
         }
-        con.close();
+//        con.close();
     }
     
     
@@ -217,7 +220,7 @@ public class DB {
         pst.setInt(3, player.getGameCountVsPlayer());
         pst.setString(4, player.getName());
         pst.executeUpdate();
-        closeConnection();
+//        closeConnection();
                 
     }
     
