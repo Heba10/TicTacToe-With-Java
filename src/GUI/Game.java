@@ -1,14 +1,17 @@
 package GUI;
 
 import GameLogic.BoardPostion;
+import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -378,13 +381,25 @@ public class Game extends Pane {
         
             btnSave.setOnAction(e -> {
                 
-                 Alert a = new Alert(AlertType.CONFIRMATION); 
-                 a.setContentText("Do You Want To Save ?"); 
-                 a.setGraphic(null);
-                 a.setHeaderText(null);
-                 a.setResizable(false);
-                 a.setTitle("Save");
-                 a.show();
+                    TextInputDialog dialog = new TextInputDialog("Enter Game Name Here");
+                    dialog.setTitle("Save Game");
+                    dialog.setHeaderText("Please Enter your Game Name:");
+                    dialog.setContentText(null);
+                    dialog.setGraphic(null);
+
+                    // Traditional way to get the response value.
+                    Optional<String> result = dialog.showAndWait();
+                    if (result.isPresent()){
+                        System.out.println("Your game name: " + result.get());
+                    }
+                
+//                 Alert a = new Alert(AlertType.CONFIRMATION); 
+//                 a.setContentText("Do You Want To Save ?"); 
+//                 a.setGraphic(null);
+//                 a.setHeaderText(null);
+//                 a.setResizable(false);
+//                 a.setTitle("Save");
+//                 a.show();
 
             });
             
