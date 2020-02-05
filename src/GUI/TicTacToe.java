@@ -26,6 +26,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -60,7 +61,7 @@ public class TicTacToe extends Application {
         Scene CreateGameSC = new Scene(CG);
         
         game = new Game();
-        
+        Scene gm = new Scene(game);
         
         Records records = new Records();
         Scene rec = new Scene(records);
@@ -142,7 +143,37 @@ public class TicTacToe extends Application {
             
             //create game partition
             CG.button.setOnAction(e -> {
-                stage.setScene(pvpsc);
+                
+                Scenepvp online = new Scenepvp();
+                Scene scOnline = new Scene(online);
+                online.getStylesheets().add(getClass().getResource("style.css").toString());
+                
+                online.label.setLayoutX(170.0);
+                online.label.setLayoutY(290.0);
+                
+                online.textField.setVisible(false);
+                online.label.setFont(Font.loadFont(Scene1.class.getResource("Fonts/AGENTORANGE.TTF").toExternalForm(), 35));
+                online.label.setTextFill(Color.web("#0076a3"));
+                
+                String ip = "192.168.0.1";
+
+                
+                online.label.setText("Your Ip Adress Is\n     " + ip);
+                
+                //baaaaaaaaaack
+                online.backbtn.setOnAction(event -> {
+                    stage.setScene(scStart);
+                    stage.show();
+                });
+                
+                // go to wait
+                online.button.setOnAction(ev ->{
+                    stage.setScene(spin);
+                    stage.show();
+                });
+                
+                // set scene
+                stage.setScene(scOnline);
                 stage.show();
             });
             
@@ -150,23 +181,19 @@ public class TicTacToe extends Application {
             
         //choose x or o scene buttons handeling
             choose.btnX.setOnAction(e -> {
-                Scene gm = new Scene(game);
                 stage.setScene(gm);
-//                game = new Game();
                 startSymbol='X';
                 new GameBuilder();
             });
        
             choose.btnO.setOnAction(e -> {
-                Scene gm = new Scene(game);
                 stage.setScene(gm);
                 startSymbol='O';
                 new GameBuilder();
 
             });
             
-        ///////////////////
-            
+        //////////////////
             
             
          
