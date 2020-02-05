@@ -390,6 +390,7 @@ public class Game extends Pane {
                     // Traditional way to get the response value.
                     Optional<String> result = dialog.showAndWait();
                     if (result.isPresent()){
+                        
                         System.out.println("Your game name: " + result.get());
                     }
                 
