@@ -6,8 +6,12 @@
 package GUI;
 
 //import com.sun.org.glassfish.gmbal.GmbalMBean;
+import Database.DB;
+import Database.GameData;
+import Database.PlayerData;
 import GameLogic.BoardPostion;
 import GameLogic.GameLogic;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Optional;
@@ -37,6 +41,10 @@ public class TicTacToe extends Application {
     Game game;
     char startSymbol;
     Game pvpGame;    
+    public DB db;
+   public GameData gameData;
+   public PlayerData player;
+   boolean isNew;
     @Override
     public void start(Stage stage) throws Exception {
         
@@ -69,6 +77,12 @@ public class TicTacToe extends Application {
         Spinner spn = new Spinner();
         Scene spin = new Scene(spn);
         ////////////////////////
+        
+        //database
+        db=new DB();
+        //
+       
+        player=new PlayerData();
 
         
         //Adding Style Sheets
@@ -84,7 +98,27 @@ public class TicTacToe extends Application {
         
         //Actions 
          scene.button.setOnAction((ActionEvent e) -> {
-            
+             
+            String playername=scene.getTextField().getText();
+            try {
+                player=db.getPlayer(playername);
+                System.out.println(player.getId());
+                isNew=false;
+//            if(player.getId()!=0)
+//                player.setName(playername);
+//            else
+            } catch (SQLException ex) {
+                player=new PlayerData();
+                player.setName(playername);
+                isNew=true;
+                ex.printStackTrace();
+            }
+            finally
+            {
+               //close connection
+//              
+            }
+                
             stage.setScene(sc2);
             stage.show();
         });
@@ -184,12 +218,31 @@ public class TicTacToe extends Application {
                 stage.setScene(gm);
                 startSymbol='X';
                 new GameBuilder();
+                System.out.println(isNew);
+            try {
+                gameData=new GameData(db.getLastGameIndex());
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+                gameData.setVsPlayerName("computer");
+                player.incVsCompCount();
+                gameData.setStartedPlayerName(player.getName());
+                
             });
        
             choose.btnO.setOnAction(e -> {
                 stage.setScene(gm);
                 startSymbol='O';
                 new GameBuilder();
+            try {
+                gameData=new GameData(db.getLastGameIndex());
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+                 player.incVsCompCount();
+                gameData.setVsPlayerName("computer");
+                gameData.setStartedPlayerName(player.getName());
+                
 
             });
             
@@ -229,6 +282,7 @@ public class TicTacToe extends Application {
              game.backbtn.setOnAction(e -> {  
                 
                 //remove image after click back
+                isNew=false;
                 
                  Alert a = new Alert(AlertType.CONFIRMATION);
                 
@@ -324,10 +378,11 @@ public class TicTacToe extends Application {
                      if(!gameLogic.isWin())
                      {
                          System.out.println(gameLogic.getSymbol());
+                         System.out.println("x="+x+" y="+y);
                          if(gameLogic.playMove(x, y))
                          {
-
-     //                         button.setText(String.valueOf(gameLogic.getPos(x,y).getValue()));
+                              gameData.getGameMoves().addMove(x, y);
+     //                       button.setText(String.valueOf(gameLogic.getPos(x,y).getValue()));
                              if(gameLogic.getPos(x, y).getValue()=='X')
                              imageView.setImage(game.imageX);
                              else
@@ -336,13 +391,28 @@ public class TicTacToe extends Application {
                          if(gameLogic.isWin())
                          {
      //                         winLabel.setText("player win");
+                             System.out.println(isNew);
                              highlightWin(Color.GREEN,gameLogic);
      //                         disableAllBtns();
+                            gameData.setWinnerName(player.getName());
+                            player.incScore();
                              System.out.println("player win");
+                             try {
+                                 db.PushGame(gameData);
+                                 if(isNew)db.pushPlayer(player);
+                                 else db.updatePlayerData(player);
+                             } catch (SQLException ex) {
+                                 ex.printStackTrace();
+                             }
+                             
+                            
+                                 
                          }
                          else if(gameLogic.isFill())
                          {
                              System.out.println("draw");
+                             gameData.setWinnerName("draw");
+                             
                          }
                          else
                          {
@@ -389,6 +459,7 @@ public class TicTacToe extends Application {
            BoardPostion computerPos=gameLogic.computerMove();
            int x=computerPos.getX();
            int y=computerPos.getY();
+           gameData.getGameMoves().addMove(x, y);
            System.out.println("now comp turn"+x+" "+y+" "+gameLogic.getPos(x, y).getValue());
            if(gameLogic.getPos(x, y).getValue()=='X')
               game.GUIBoard[x][y].setImage(game.imageX);
@@ -401,6 +472,10 @@ public class TicTacToe extends Application {
                System.out.println("computer win");
    //            disableAllBtns();
                highlightWin(Color.RED,gameLogic);
+              
+               
+               
+               
            }
         
         
@@ -487,6 +562,20 @@ public class TicTacToe extends Application {
         }
         
     }
+
+    public GameData getGameData() {
+        return gameData;
+    }
+
+    public PlayerData getPlayer() {
+        return player;
+    }
+
+    public DB getDb() {
+        return db;
+    }
+     
+     
     
     
 }
