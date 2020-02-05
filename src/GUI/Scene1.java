@@ -97,4 +97,9 @@ public class Scene1 extends Pane {
         
 
     }
+
+    public TextField getTextField() {
+        return textField;
+    }
+    
 }
