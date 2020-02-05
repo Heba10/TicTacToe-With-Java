@@ -28,11 +28,11 @@ public class GameMoves
         }
     }
     
-    void addMove(int x,int y,char c)
+    public void addMove(int x,int y,char c)
     {
         moves.add(new BoardPostion(x,y,c));
     }
-    void addMove(int x,int y)
+    public void addMove(int x,int y)
     {
         moves.add(new BoardPostion(x,y));
     }

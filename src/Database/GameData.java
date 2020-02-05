@@ -44,7 +44,7 @@ public class GameData {
     }
     
     
-    public GameData(ResultSet rs,GameMoves gameMoves) throws SQLException
+     public GameData(ResultSet rs,GameMoves gameMoves) throws SQLException
     {
         
             id=rs.getInt(1);
@@ -58,19 +58,16 @@ public class GameData {
        
     }
     
-    void setId(int n)
+    public void setId(int n)
     {
         id=n;
     }
     
-    void setVsPlayerName(String name)
+    public void setVsPlayerName(String name)
     {
         vsPlayerName=name;
     }
-    void setwinnerName(String name)
-    {
-        winnerName=name;
-    }
+   
 
     public String getDateTime() {
         return dateTime;

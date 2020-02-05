@@ -76,6 +76,21 @@ public class PlayerData
         return score;
     }
     
+    public void incVsCompCount()
+    {
+       gameCountVsComputer++;
+    }
+    
+    public void incVsPlayerCount()
+    {
+        gameCountVsPlayer++;
+    }
+    
+    public  void incScore()
+    {
+        score++;
+    }
+    
     
    
     
