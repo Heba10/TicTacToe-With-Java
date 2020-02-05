@@ -31,17 +31,19 @@ public class GameData {
          isRecorded=1;
          gameMoves= new GameMoves();
     }
-    
-    public GameData(int recorded)
+    public GameData(int id)
     {
-        
-         id=0;
+         this.id=id+1;
+         name=null;
          vsPlayerName=null;
          startedPlayerName=null;
          winnerName=null;
-          dateTime=Instant.now().toString();
-         isRecorded=recorded;
+         dateTime=Instant.now().toString();
+         isRecorded=1;
+         gameMoves= new GameMoves();
     }
+    
+    
     public GameData(ResultSet rs,GameMoves gameMoves) throws SQLException
     {
         
