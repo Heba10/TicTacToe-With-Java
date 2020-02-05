@@ -24,9 +24,15 @@ public class DB {
     }
     public void establishConnection() throws SQLException
     {
+        if(con==null)
+        {
             con= DriverManager.getConnection("jdbc:sqlite:test.db");
             System.out.println("connection sucess");
             st=con.createStatement();
+            
+        }
+        
+           
     }
     
     public boolean isExist()
@@ -54,7 +60,12 @@ public class DB {
    
     public void closeConnection() throws SQLException
     {
+        rs.close();
+        st.close();
+        pst.close();
         con.close();
+        
+        System.out.println("disconnected");
     }
     public Connection getCon() {
         return con;
@@ -120,7 +131,7 @@ public class DB {
     
     public void PushGame(GameData game) throws SQLException
     {
-        establishConnection();
+//        establishConnection();
         sql="insert into GameData (name,vsPlayerName,startedPlayerName,winnerName,dataTime,isRecorded)values (?,?,?,?,?,?)";
         pst=con.prepareStatement(sql);
         pst.setString(1,game.getName());
@@ -130,21 +141,46 @@ public class DB {
         pst.setString(5,game.getDateTime());
         pst.setInt(6, game.getIsRecorded());
         pst.execute();
+        if(game.getIsRecorded()==1)
+        {
+            pushGameMoves(game.getGameMoves(), game.getId());
+        }
+        
         con.close();
         
     }
+    
+    public void pushGameMoves(GameMoves gameMoves,int gameID) throws SQLException
+    {
+//        establishConnection();
+        sql="insert into GameMoves (xPos,yPos,gameId) values (?,?,?)";
+        pst=con.prepareStatement(sql);
+        pst.setInt(3, gameID);
+        for(BoardPostion pos : gameMoves.getMoves())
+        {
+            pst.setInt(1,pos.getX());
+            pst.setInt(2, pos.getY());
+            pst.execute();
+            
+        }
+        con.close();
+    }
+    
+    
     public GameData getGame(int id) throws SQLException
     {
         establishConnection();
         sql="select * from GameData where id ="+id;
         rs=st.executeQuery(sql);
+//        System.out.println(rs.getInt(1));
         return new GameData(rs,getGameMoves(id));
     }
     
     public GameMoves getGameMoves(int id) throws SQLException
     {
         
-        establishConnection();
+        Connection con= DriverManager.getConnection("jdbc:sqlite:test.db");
+        Statement st=con.createStatement();
         sql="select * from GameMoves where GameId ="+id;
         ResultSet rs=st.executeQuery(sql);
         return new GameMoves(rs);
@@ -163,7 +199,57 @@ public class DB {
         return games;
     }
     
-   
+    public int getLastGameIndex() throws SQLException
+    {
+        sql="select max(id) from GameData";
+        rs=st.executeQuery(sql);
+        return rs.getInt(1);
+
+    }
+    
+    public void updatePlayerData(PlayerData player) throws SQLException
+    {
+        sql="update PlayerData set score=? ,gameCountVsComputer=? ,gameCountVsPlayer=? where name=?";
+        establishConnection();
+        pst =con.prepareStatement(sql);
+        pst.setInt(1, player.getScore());
+        pst.setInt(2,player.getGameCountVsComputer());
+        pst.setInt(3, player.getGameCountVsPlayer());
+        pst.setString(4, player.getName());
+        pst.executeUpdate();
+        closeConnection();
+                
+    }
+    
+    public void DeleteRecord(GameData game) throws SQLException
+    {
+        establishConnection();
+        sql="delete from GameMoves where gameId="+game.getId();
+        st.execute(sql);
+//        closeConnection();
+        game.setIsRecorded(0);
+        game.setGameMoves(null);
+        sql="update GameData set isRecorded=0 where id="+game.getId();
+        st.execute(sql);
+//        closeConnection();
+        
+//        con.close();
+        
+    }
+    
+    public Vector getAllRecords() throws SQLException
+    {
+        Vector<GameData> games=new Vector<>();
+        Vector<GameData>dbGames=getAllGames();
+        for(GameData g : dbGames)
+        {
+            if(g.getIsRecorded()==1)
+            {
+                games.add(g);
+            }
+        }
+        return games;
+    }
     
 //    public static void main(String[] args) throws SQLException, IOException {
 //        DB db=new DB();
@@ -192,6 +278,21 @@ public class DB {
 //        System.out.println(game.getGameMoves().getMoves().elementAt(3));
         
 //    }
+    
+    public static void main(String[] args) throws SQLException {
+        DB db= new DB();
+        Vector<GameData> v=db.getAllRecords();
+        for(GameData game : v)
+        {   System.out.println(game.getId());
+            for(BoardPostion pos: game.getGameMoves().getMoves())
+            {
+                System.out.println("x= "+pos.getX()+" y="+pos.getY());
+            }
+        }
+        
+        
+        
+    }
     
     
         
