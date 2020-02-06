@@ -33,6 +33,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javax.swing.Action;
 
 
 /**
@@ -253,53 +254,102 @@ public class TicTacToe extends Application {
             });
             
             
-         rec.button.setOnAction((ActionEvent e) -> {
-            
-//         rec.ReplayGame replay = new Records.ReplayGame();
-            
-        
-//             Records.ReplayGame replay = Records.new ReplayGame();
+//         rec.button.setOnAction((ActionEvent myevent) -> {
+//         Game game2 = new Game();
+//            try {
+//                rec.runTimer(game2,1);
+//                
+//                Scene scRec = new Scene(game2);
+//                stage.setScene(scRec);
+//                stage.show();
+//                
+//            } catch (SQLException ex) {
+//                Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//         
+//            game.backbtn.setOnAction(ev -> {
+//            
+//                stage.setScene(sc2);
+//                stage.show(); 
+//            
+//            });
+//          
+//                   
+//         
+//         game.ivSave.setImage(null);
+//         game.btnSave.setCursor(Cursor.DEFAULT);
+//         
+//         
+//         game.ivRecord.setImage(null);
+//         game.btnRecord.setCursor(Cursor.DEFAULT);
+//         
+//         game.drawsiv.setImage(null);
+//         game.scoreOiv.setImage(null);
+//         game.scoreXiv.setImage(null);
+//         
+//         
+//         game.labelD.setText("");
+//         game.labelX.setText("");
+//         game.labelO.setText("");
+//         
+//         
+//                
+//         });
          
-    
+         
+         
+         
+         //handler
+         
+         
+         
+         
+         class BtnHandler implements EventHandler<ActionEvent>
+            {
+//                Button btn;/
+                int idx;
+                BtnHandler(int idx) 
+                {
+//                    this.btn=btn;
+                    this.idx=idx;  
+                }
+
+                @Override
+                public void handle(ActionEvent event)
+                {
+                    System.out.println("handel fun");
+                      try
+                    {
+                       rec.runTimer(game,idx);
+
+//                       Scene scRec = new Scene(game);
+                       stage.setScene(gm);
+                       stage.show();
+
+                    } catch (SQLException ex)
+                    {
+                        ex.printStackTrace();
+                    }
+         
+//                    game.backbtn.setOnAction(ev ->
+//                    {
+//                        stage.setScene(sc2);
+//                        stage.show(); 
+//                    });
+                }
+            }
             
-         Game game = new Game();
-            try {
-                rec.runTimer(game);
-                
-                Scene scRec = new Scene(game);
-                stage.setScene(scRec);
-                stage.show();
-                
-            } catch (SQLException ex) {
-                Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+            
+             for(int i=0;i<rec.buttons.size();i++)
+            {
+                Button btn=rec.buttons.elementAt(i);
+                btn.setOnAction(new BtnHandler(i));
             }
          
-            game.backbtn.setOnAction(ev -> {
-            
-                stage.setScene(sc2);
-                stage.show(); 
-            
-            });
-         
-         game.ivSave.setImage(null);
-         game.btnSave.setCursor(Cursor.DEFAULT);
          
          
-         game.ivRecord.setImage(null);
-         game.btnRecord.setCursor(Cursor.DEFAULT);
-         
-         game.drawsiv.setImage(null);
-         game.scoreOiv.setImage(null);
-         game.scoreXiv.setImage(null);
          
          
-         game.labelD.setText("");
-         game.labelX.setText("");
-         game.labelO.setText("");
-         
-         
-                
-         });
             
         //////////////////
             
@@ -655,6 +705,8 @@ public class TicTacToe extends Application {
     public DB getDb() {
         return db;
     }
+    
+    
      
      
     
