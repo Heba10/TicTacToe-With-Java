@@ -19,6 +19,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -32,6 +33,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
 
 /**
  *
@@ -71,11 +73,12 @@ public class TicTacToe extends Application {
         game = new Game();
         Scene gm = new Scene(game);
         
-        Records records = new Records(stage);
-        Scene rec = new Scene(records);
-        
         Spinner spn = new Spinner();
         Scene spin = new Scene(spn);
+        
+        Records rec = new Records();
+        Scene recScene = new Scene(rec);
+        
         ////////////////////////
         
         //database
@@ -93,7 +96,7 @@ public class TicTacToe extends Application {
         pvpsc.getStylesheets().add(getClass().getResource("style.css").toString());
         CG.getStylesheets().add(getClass().getResource("style.css").toString());
         game.getStylesheets().add(getClass().getResource("style.css").toString());
-        records.getStylesheets().add(getClass().getResource("style.css").toString());
+        rec.getStylesheets().add(getClass().getResource("style.css").toString());
         ///////////////////
         
         //Actions 
@@ -133,7 +136,7 @@ public class TicTacToe extends Application {
         });
          
          scene2.btnViewRecords.setOnAction(e -> {
-             stage.setScene(rec);
+             stage.setScene(recScene);
              stage.show();
          });
          ///////////////
@@ -249,6 +252,55 @@ public class TicTacToe extends Application {
 
             });
             
+            
+         rec.button.setOnAction((ActionEvent e) -> {
+            
+//         rec.ReplayGame replay = new Records.ReplayGame();
+            
+        
+//             Records.ReplayGame replay = Records.new ReplayGame();
+         
+    
+            
+         Game game = new Game();
+            try {
+                rec.runTimer(game);
+                
+                Scene scRec = new Scene(game);
+                stage.setScene(scRec);
+                stage.show();
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         
+            game.backbtn.setOnAction(ev -> {
+            
+                stage.setScene(sc2);
+                stage.show(); 
+            
+            });
+         
+         game.ivSave.setImage(null);
+         game.btnSave.setCursor(Cursor.DEFAULT);
+         
+         
+         game.ivRecord.setImage(null);
+         game.btnRecord.setCursor(Cursor.DEFAULT);
+         
+         game.drawsiv.setImage(null);
+         game.scoreOiv.setImage(null);
+         game.scoreXiv.setImage(null);
+         
+         
+         game.labelD.setText("");
+         game.labelX.setText("");
+         game.labelO.setText("");
+         
+         
+                
+         });
+            
         //////////////////
             
             
@@ -305,6 +357,7 @@ public class TicTacToe extends Application {
                             game.GUIBoard[i][j].setImage(null);
                         }
                  }
+                 
                  
                  
             });

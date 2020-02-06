@@ -35,12 +35,9 @@ public  class Records extends ScrollPane {
     Vector<GameData> games;
     Game gm;
     Scene ss;
-    SceneStart scstr;
-    Scene sc;
-    public Records(Stage primaryStage) throws SQLException {
-        
-        
+    public ReplayGame rg;
 
+    public Records() throws SQLException {
         anchorPane = new AnchorPane();
         imageView = new ImageView();
         button = new Button();
@@ -188,45 +185,27 @@ public  class Records extends ScrollPane {
         anchorPane.getChildren().add(imageView0);
         
         button.setOnAction(e->{
-        ReplayGame replay = new ReplayGame();
-         gm=new Game();
-         
-         gm.ivSave.setImage(null);
-         gm.btnSave.setCursor(Cursor.DEFAULT);
-         
-         
-         gm.ivRecord.setImage(null);
-         gm.btnRecord.setCursor(Cursor.DEFAULT);
-         
-         gm.drawsiv.setImage(null);
-         gm.scoreOiv.setImage(null);
-         gm.scoreXiv.setImage(null);
-         
-         
-         gm.labelD.setText("");
-         gm.labelX.setText("");
-         gm.labelO.setText("");
+
 
          
          
-        ss=new Scene(gm);
-        primaryStage.setScene(ss);
+        
         
         //back button
         
         
-         gm.backbtn.setOnAction(event -> {  
-                
-                //remove image after click back
-                    
-                    scstr = new SceneStart();
-                    scstr.getStylesheets().add(getClass().getResource("style.css").toString());
-                    Scene sc = new Scene(scstr);
-                
-                    primaryStage.setScene(sc);
-                    replay.timer.stop();
-        
-        });        
+//         gm.backbtn.setOnAction(event -> {  
+//                
+//                //remove image after click back
+//                    
+//                    scstr = new SceneStart();
+//                    scstr.getStylesheets().add(getClass().getResource("style.css").toString());
+//                    Scene sc = new Scene(scstr);
+//                
+//                    primaryStage.setScene(sc);
+//                    replay.timer.stop();
+//        
+//        });        
         
         
         });
@@ -238,14 +217,21 @@ public  class Records extends ScrollPane {
 
     }
     
-    class ReplayGame
+    public void runTimer(Game game) throws SQLException {
+                gm=game;
+
+        rg = this.new ReplayGame();
+    }
+    
+    public class ReplayGame
     {
         int counter;
         RecordTimer timer;
         GameLogic gameLogic= new GameLogic();
         
-        public ReplayGame()
+        public ReplayGame() throws SQLException
         {
+            games = db.getAllRecords();
             timer=new RecordTimer();
             counter=0;
             timer.start();
@@ -262,8 +248,8 @@ public  class Records extends ScrollPane {
                 
             }
             
-            int x=game.getGameMoves().getMoves().elementAt(counter).getX();
-            int y=game.getGameMoves().getMoves().elementAt(counter).getY();
+            int x = game.getGameMoves().getMoves().elementAt(counter).getX();
+            int y = game.getGameMoves().getMoves().elementAt(counter).getY();
             System.out.println("x "+x+" y "+y);
             gameLogic.playMove(x, y);
             drawPlay(x, y);
@@ -306,3 +292,4 @@ public  class Records extends ScrollPane {
     
     
 }
+
