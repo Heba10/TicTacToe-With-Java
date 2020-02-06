@@ -50,7 +50,7 @@ public class DB {
     
     public void createTables() throws SQLException
     {
-        sql="create table GameData(id INTEGER primary key autoincrement,name string(100) not null ,vsPlayerName string(100) not null, startedPlayerName string(100) not null ,winnerName string(100),dataTime date ,isRecorded integer(10) not null)";
+        sql="create table GameData(id INTEGER primary key autoincrement,name string(100) not null ,vsPlayerName string(100) not null, startedPlayerName string(100) not null ,winnerName string(100),dataTime date ,isRecorded integer(10) not null ,startSymbol char not null)";
         st.execute(sql);
         sql="create table GameMoves(id integer primary key autoincrement,xPos integer not null,yPos  integer not null,gameId integer REFERENCES GameData(id))";
         st.execute(sql);
@@ -127,7 +127,8 @@ public class DB {
         establishConnection();
         sql="select * from PlayerData where name='"+name+"'";
         rs=st.executeQuery(sql);
-        if(rs!=null)
+        System.out.println(rs.isClosed());
+        if(!rs.isClosed())
             return new PlayerData(rs);
         else return null;
     }
@@ -135,14 +136,17 @@ public class DB {
     public void PushGame(GameData game) throws SQLException
     {
 //        establishConnection();
-        sql="insert into GameData (name,vsPlayerName,startedPlayerName,winnerName,dataTime,isRecorded)values (?,?,?,?,?,?)";
+        //(id,name,vsPlayerName,startedPlayerName,winnerName,dataTime,isRecorded,)
+        sql="insert into GameData values (?,?,?,?,?,?,?,?)";
         pst=con.prepareStatement(sql);
-        pst.setString(1,game.getName());
-        pst.setString(2,game.getVsPlayerName() );
-        pst.setString(3,game.getStartedPlayerName());
-        pst.setString(4,game.getWinnerName());
-        pst.setString(5,game.getDateTime());
-        pst.setInt(6, game.getIsRecorded());
+        pst.setInt(1, game.getId());
+        pst.setString(2,game.getName());
+        pst.setString(3,game.getVsPlayerName() );
+        pst.setString(4,game.getStartedPlayerName());
+        pst.setString(5,game.getWinnerName());
+        pst.setString(6,game.getDateTime());
+        pst.setInt(7, game.getIsRecorded());
+        pst.setString(8, game.getStartSymbol());
         pst.execute();
         if(game.getIsRecorded()==1)
         {
@@ -163,6 +167,9 @@ public class DB {
         {
             pst.setInt(1,pos.getX());
             pst.setInt(2, pos.getY());
+//            pst.setByte(3, (byte)pos.getValue());
+//            pst.setString(3,String.valueOf(pos.getValue()));
+            
             pst.execute();
             
         }
@@ -242,6 +249,7 @@ public class DB {
     
     public Vector getAllRecords() throws SQLException
     {
+        establishConnection();
         Vector<GameData> games=new Vector<>();
         Vector<GameData>dbGames=getAllGames();
         for(GameData g : dbGames)
