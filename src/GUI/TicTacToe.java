@@ -39,7 +39,7 @@ import javafx.stage.Stage;
  */
 public class TicTacToe extends Application {
     Game game;
-    char startSymbol;
+    String startSymbol;
     Game pvpGame;    
     public DB db;
    public GameData gameData;
@@ -71,7 +71,7 @@ public class TicTacToe extends Application {
         game = new Game();
         Scene gm = new Scene(game);
         
-        Records records = new Records();
+        Records records = new Records(stage);
         Scene rec = new Scene(records);
         
         Spinner spn = new Spinner();
@@ -102,15 +102,18 @@ public class TicTacToe extends Application {
             String playername=scene.getTextField().getText();
             try {
                 player=db.getPlayer(playername);
-                System.out.println(player.getId());
-                isNew=false;
-//            if(player.getId()!=0)
-//                player.setName(playername);
-//            else
+                if(player==null)
+                {
+                    isNew=true;
+                    player=new PlayerData();
+                    player.setName(playername);
+                }
+                else
+                    isNew=false;
+//            
             } catch (SQLException ex) {
-                player=new PlayerData();
-                player.setName(playername);
-                isNew=true;
+                
+                
                 ex.printStackTrace();
             }
             finally
@@ -216,11 +219,11 @@ public class TicTacToe extends Application {
         //choose x or o scene buttons handeling
             choose.btnX.setOnAction(e -> {
                 stage.setScene(gm);
-                startSymbol='X';
+                startSymbol="X";
                 new GameBuilder();
                 System.out.println(isNew);
             try {
-                gameData=new GameData(db.getLastGameIndex());
+                gameData=new GameData(db.getLastGameIndex(),startSymbol);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -232,10 +235,10 @@ public class TicTacToe extends Application {
        
             choose.btnO.setOnAction(e -> {
                 stage.setScene(gm);
-                startSymbol='O';
+                startSymbol="O";
                 new GameBuilder();
             try {
-                gameData=new GameData(db.getLastGameIndex());
+                gameData=new GameData(db.getLastGameIndex(),startSymbol);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -341,9 +344,9 @@ public class TicTacToe extends Application {
 
         public GameBuilder()
         {
-            gameLogic=new GameLogic(startSymbol);
+            gameLogic=new GameLogic(startSymbol.charAt(0));
             
-            if(startSymbol=='o')game.imageViewTurn.setImage(game.imageO);
+            if(startSymbol.charAt(0)=='O')game.imageViewTurn.setImage(game.imageO);
             else game.imageViewTurn.setImage(game.imageX);
             game.btn00.setOnAction(new EventHandel(0,0,game.view00));
             game.btn01.setOnAction(new EventHandel(0,1,game.view01));
@@ -384,7 +387,7 @@ public class TicTacToe extends Application {
                               gameData.getGameMoves().addMove(x, y);
      //                       button.setText(String.valueOf(gameLogic.getPos(x,y).getValue()));
                              if(gameLogic.getPos(x, y).getValue()=='X')
-                             imageView.setImage(game.imageX);
+                                imageView.setImage(game.imageX);
                              else
                                  imageView.setImage(game.imageO);
                          }
@@ -396,6 +399,20 @@ public class TicTacToe extends Application {
      //                         disableAllBtns();
                             gameData.setWinnerName(player.getName());
                             player.incScore();
+                            
+                            if(gameData.getStartSymbol().charAt(0)=='X')
+                            {
+                                Integer value= Integer.parseInt(game.labelX.getText())+1;
+                                game.labelX.setText(value.toString());
+                            }
+                            else
+                            {
+                                Integer value= Integer.parseInt(game.labelO.getText())+1;
+                                game.labelO.setText(value.toString());
+                            }
+                             
+                             
+                             
                              System.out.println("player win");
                              try {
                                  db.PushGame(gameData);
@@ -459,7 +476,7 @@ public class TicTacToe extends Application {
            BoardPostion computerPos=gameLogic.computerMove();
            int x=computerPos.getX();
            int y=computerPos.getY();
-           gameData.getGameMoves().addMove(x, y);
+           gameData.getGameMoves().addMove(x, y,computerPos.getValue());
            System.out.println("now comp turn"+x+" "+y+" "+gameLogic.getPos(x, y).getValue());
            if(gameLogic.getPos(x, y).getValue()=='X')
               game.GUIBoard[x][y].setImage(game.imageX);
@@ -472,6 +489,17 @@ public class TicTacToe extends Application {
                System.out.println("computer win");
    //            disableAllBtns();
                highlightWin(Color.RED,gameLogic);
+               
+               if(gameData.getStartSymbol().charAt(0)=='O')
+                {
+                    Integer value= Integer.parseInt(game.labelX.getText())+1;
+                    game.labelX.setText(value.toString());
+                }
+                else
+                {
+                    Integer value= Integer.parseInt(game.labelO.getText())+1;
+                    game.labelO.setText(value.toString());
+                }
               
                
                
@@ -496,7 +524,7 @@ public class TicTacToe extends Application {
         {
             gameLogic=new GameLogic();
             
-            if(startSymbol=='o')pvpGame.imageViewTurn.setImage(game.imageO);
+            if(startSymbol.charAt(0)=='O')pvpGame.imageViewTurn.setImage(game.imageO);
             else pvpGame.imageViewTurn.setImage(game.imageX);
             
             
