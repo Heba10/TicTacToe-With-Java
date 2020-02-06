@@ -64,7 +64,7 @@ public class Game extends Pane {
         
    
     public Game() {
-       
+      
         labelX = new Label();
         labelO = new Label();
         labelD = new Label();
@@ -103,7 +103,7 @@ public class Game extends Pane {
         imageX=new Image(getClass().getResource("images/x.png").toExternalForm());
         imageO=new Image(getClass().getResource("images/O.png").toExternalForm());
 //        
-        System.out.println(imageX.getWidth());
+        
        
         
         
@@ -330,15 +330,15 @@ public class Game extends Pane {
         btnSave.setGraphic(ivSave);
         
         
-        labelX.setLayoutX(40.0);
+        labelX.setLayoutX(80);
         labelX.setLayoutY(130.0);
-        labelX.setText("X is here");
+        labelX.setText("0");
         labelX.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
         
         
         labelO.setLayoutX(40.0);
         labelO.setLayoutY(220.0);
-        labelO.setText("O is here");
+        labelO.setText("0");
         labelO.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
         
         
