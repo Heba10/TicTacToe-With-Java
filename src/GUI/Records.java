@@ -1,10 +1,21 @@
 package GUI;
 
+import Database.DB;
+import Database.GameData;
+import GameLogic.BoardPostion;
+import GameLogic.GameLogic;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.animation.AnimationTimer;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.scene.*;
 
 public  class Records extends ScrollPane {
 
@@ -20,8 +31,15 @@ public  class Records extends ScrollPane {
     protected final Button button6;
     protected final Button button7;
     protected final ImageView imageView0;
-
-    public Records() {
+    DB db;
+    Vector<GameData> games;
+    Game gm;
+    Scene ss;
+    SceneStart scstr;
+    Scene sc;
+    public Records(Stage primaryStage) throws SQLException {
+        
+        
 
         anchorPane = new AnchorPane();
         imageView = new ImageView();
@@ -35,6 +53,11 @@ public  class Records extends ScrollPane {
         button6 = new Button();
         button7 = new Button();
         imageView0 = new ImageView();
+        db=new DB();
+        games=db.getAllRecords();
+        System.out.println(games.size());
+        
+        
 
         setMaxHeight(USE_PREF_SIZE);
         setMaxWidth(USE_PREF_SIZE);
@@ -163,6 +186,123 @@ public  class Records extends ScrollPane {
         anchorPane.getChildren().add(button6);
         anchorPane.getChildren().add(button7);
         anchorPane.getChildren().add(imageView0);
+        
+        button.setOnAction(e->{
+        ReplayGame replay = new ReplayGame();
+         gm=new Game();
+         
+         gm.ivSave.setImage(null);
+         gm.btnSave.setCursor(Cursor.DEFAULT);
+         
+         
+         gm.ivRecord.setImage(null);
+         gm.btnRecord.setCursor(Cursor.DEFAULT);
+         
+         gm.drawsiv.setImage(null);
+         gm.scoreOiv.setImage(null);
+         gm.scoreXiv.setImage(null);
+         
+         
+         gm.labelD.setText("");
+         gm.labelX.setText("");
+         gm.labelO.setText("");
+
+         
+         
+        ss=new Scene(gm);
+        primaryStage.setScene(ss);
+        
+        //back button
+        
+        
+         gm.backbtn.setOnAction(event -> {  
+                
+                //remove image after click back
+                    
+                    scstr = new SceneStart();
+                    scstr.getStylesheets().add(getClass().getResource("style.css").toString());
+                    Scene sc = new Scene(scstr);
+                
+                    primaryStage.setScene(sc);
+                    replay.timer.stop();
+        
+        });        
+        
+        
+        });
+        
+        
+         //back button
+         
+
 
     }
+    
+    class ReplayGame
+    {
+        int counter;
+        RecordTimer timer;
+        GameLogic gameLogic= new GameLogic();
+        
+        public ReplayGame()
+        {
+            timer=new RecordTimer();
+            counter=0;
+            timer.start();
+        }
+        
+        
+       public void startReplay()
+        {
+            GameData game= games.elementAt(0);
+            
+            for(BoardPostion pos : game.getGameMoves().getMoves())
+            {
+                System.out.println(pos.getX() + " "+pos.getY());
+                
+            }
+            
+            int x=game.getGameMoves().getMoves().elementAt(counter).getX();
+            int y=game.getGameMoves().getMoves().elementAt(counter).getY();
+            System.out.println("x "+x+" y "+y);
+            gameLogic.playMove(x, y);
+            drawPlay(x, y);
+            gameLogic.printBoard();
+            
+            counter++;
+            if(counter>=game.getGameMoves().getMoves().size())
+            {
+                timer.stop();
+            }
+        }
+       
+       public void drawPlay(int x,int y)
+       {
+           System.out.println(gameLogic.getPos(x, y).getValue());
+           if(gameLogic.getPos(x, y).getValue()=='X')
+            gm.GUIBoard[x][y].setImage(gm.imageX);
+           else
+               gm.GUIBoard[x][y].setImage(gm.imageO);
+       }
+    
+    
+    
+    
+        class RecordTimer extends AnimationTimer
+        {
+            @Override
+            public void handle(long now)
+            {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                startReplay();
+                
+            }
+        }
+    }
+    
+    
 }
