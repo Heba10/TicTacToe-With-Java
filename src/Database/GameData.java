@@ -17,6 +17,7 @@ public class GameData {
     String winnerName;
     String dateTime;
     int isRecorded;
+    String startSymbol;
     GameMoves gameMoves;
     
     
@@ -30,8 +31,9 @@ public class GameData {
          dateTime=Instant.now().toString();
          isRecorded=1;
          gameMoves= new GameMoves();
+         
     }
-    public GameData(int id)
+    public GameData(int id, String startSymbol)
     {
          this.id=id+1;
          name=null;
@@ -41,6 +43,7 @@ public class GameData {
          dateTime=Instant.now().toString();
          isRecorded=1;
          gameMoves= new GameMoves();
+         this.startSymbol=startSymbol;
     }
     
     
@@ -54,6 +57,7 @@ public class GameData {
             winnerName=rs.getString(5);
              dateTime=rs.getString(6);
             isRecorded=rs.getInt(7);
+            startSymbol=rs.getString(8);
             this.gameMoves=gameMoves;
        
     }
@@ -124,6 +128,15 @@ public class GameData {
     public void setWinnerName(String winnerName) {
         this.winnerName = winnerName;
     }
+
+    public void setStartSymbol(String startSymbol) {
+        this.startSymbol = startSymbol;
+    }
+
+    public String getStartSymbol() {
+        return startSymbol;
+    }
+    
     
     
     
