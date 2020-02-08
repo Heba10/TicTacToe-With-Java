@@ -25,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -48,6 +49,9 @@ public class TicTacToe extends Application {
    public GameData gameData;
    public PlayerData player;
    boolean isNew;
+   Scenepvp pvp;
+   boolean isgame;
+   
     @Override
     public void start(Stage stage) throws Exception {
         
@@ -65,7 +69,7 @@ public class TicTacToe extends Application {
         ChooseScene choose = new ChooseScene();
         Scene scChoose = new Scene(choose);
         
-        Scenepvp pvp = new Scenepvp();
+         pvp = new Scenepvp();
         Scene pvpsc = new Scene(pvp);
         
         CreateGame CG = new CreateGame();
@@ -136,7 +140,59 @@ public class TicTacToe extends Application {
             stage.show();
         });
          
+         
+         //record list buttons handler
+         class BtnHandler implements EventHandler<ActionEvent>
+            {
+//                
+                int idx;
+                BtnHandler(int idx) 
+                {
+//                    this.btn=btn;
+                    this.idx=idx;  
+                }
+
+                @Override
+                public void handle(ActionEvent event)
+                {
+                    System.out.println("handel fun");
+                      try
+                    {
+                       rec.runTimer(game,idx);
+
+//                       Scene scRec = new Scene(game);
+                       stage.setScene(gm);
+                       stage.show();
+
+                    } catch (SQLException ex)
+                    {
+                        ex.printStackTrace();
+                    }
+         
+//                    game.backbtn.setOnAction(ev ->
+//                    {
+//                        stage.setScene(sc2);
+//                        stage.show(); 
+//                    });
+                }
+            }
+            
+            
+            
+         
+         
+         
          scene2.btnViewRecords.setOnAction(e -> {
+            try {
+                rec.refreshGames();
+                  for(int i=0;i<rec.buttons.size();i++)
+                    {
+                        Button btn=rec.buttons.elementAt(i);
+                        btn.setOnAction(new BtnHandler(i));
+                    }
+            } catch (SQLException ex) {
+               ex.printStackTrace();
+            }
              stage.setScene(recScene);
              stage.show();
          });
@@ -163,15 +219,23 @@ public class TicTacToe extends Application {
         //pvp section
             //at player vs player when on click start choose x or o
             pvp.button.setOnAction(e -> {
-                 pvpGame = new Game();
+                 
+                System.out.println("before on action"+isgame);
+                isgame=true;
+                pvpGame = new Game();
                 Scene pvpGameScene = new Scene(pvpGame);
                 System.out.println("pvp");
+            try {
                 new VsLocalPlayerBuilder();
-                
+            } catch (SQLException ex) {
+               ex.printStackTrace();
+            }
+                System.out.println("after on action"+isgame);
                 
                 pvpGame.backbtn.setOnAction(event -> {
                     stage.setScene(scStart);
                     stage.show();
+                    isgame=false;
                 });
                 
                 stage.setScene(pvpGameScene);
@@ -253,6 +317,34 @@ public class TicTacToe extends Application {
 
             });
             
+            game.btnSave.setOnAction(e -> {
+                
+                    TextInputDialog dialog = new TextInputDialog("Enter Game Name Here");
+                    dialog.setTitle("Save Game");
+                    dialog.setHeaderText("Please Enter your Game Name:");
+                    dialog.setContentText(null);
+                    dialog.setGraphic(null);
+
+                    // Traditional way to get the response value.
+                    Optional<String> result = dialog.showAndWait();
+                    if (result.isPresent()){
+                        
+                        System.out.println("Your game name: " + result.get());
+                        gameData.setName(result.get());
+                        if(gameData!=null)
+                        try {
+                                 db.PushGame(gameData);
+                                 if(isNew)db.pushPlayer(player);
+                                 else db.updatePlayerData(player);
+                             } catch (SQLException ex) {
+                                 ex.printStackTrace();
+                             }
+                        
+                    }
+                    
+                    
+            });
+            
             
 //         rec.button.setOnAction((ActionEvent myevent) -> {
 //         Game game2 = new Game();
@@ -304,47 +396,7 @@ public class TicTacToe extends Application {
          
          
          
-         class BtnHandler implements EventHandler<ActionEvent>
-            {
-//                Button btn;/
-                int idx;
-                BtnHandler(int idx) 
-                {
-//                    this.btn=btn;
-                    this.idx=idx;  
-                }
-
-                @Override
-                public void handle(ActionEvent event)
-                {
-                    System.out.println("handel fun");
-                      try
-                    {
-                       rec.runTimer(game,idx);
-
-//                       Scene scRec = new Scene(game);
-                       stage.setScene(gm);
-                       stage.show();
-
-                    } catch (SQLException ex)
-                    {
-                        ex.printStackTrace();
-                    }
          
-//                    game.backbtn.setOnAction(ev ->
-//                    {
-//                        stage.setScene(sc2);
-//                        stage.show(); 
-//                    });
-                }
-            }
-            
-            
-             for(int i=0;i<rec.buttons.size();i++)
-            {
-                Button btn=rec.buttons.elementAt(i);
-                btn.setOnAction(new BtnHandler(i));
-            }
          
          
          
@@ -406,6 +458,19 @@ public class TicTacToe extends Application {
                         {
                             game.GUIBoard[i][j].setImage(null);
                         }
+                     System.out.println("is game ="+isgame);
+                    if(gameData!=null&&isgame)
+                    try {
+                            gameData.setIsRecorded(0);
+                            if(gameData.getWinnerName()==null)gameData.setWinnerName("not compeleted");
+                            db.PushGame(gameData);
+                            if(isNew)db.pushPlayer(player);
+                            else db.updatePlayerData(player);
+                        } catch (SQLException ex)
+                        {
+                          ex.printStackTrace();
+                        }
+                    isgame=false;
                  }
                  
                  
@@ -517,13 +582,7 @@ public class TicTacToe extends Application {
                              
                              
                              System.out.println("player win");
-                             try {
-                                 db.PushGame(gameData);
-                                 if(isNew)db.pushPlayer(player);
-                                 else db.updatePlayerData(player);
-                             } catch (SQLException ex) {
-                                 ex.printStackTrace();
-                             }
+                             
                              
                             
                                  
@@ -623,12 +682,17 @@ public class TicTacToe extends Application {
     {
         GameLogic gameLogic;
 
-        public VsLocalPlayerBuilder()
+        public VsLocalPlayerBuilder() throws SQLException
         {
             gameLogic=new GameLogic();
+            gameData=new GameData(db.getLastGameIndex(), "X");
+            gameData.setVsPlayerName(pvp.getTextField().getText());
+            gameData.setStartSymbol("X");
+            gameData.setStartedPlayerName(player.getName());
+            player.incVsPlayerCount();
             
-            if(startSymbol.charAt(0)=='O')pvpGame.imageViewTurn.setImage(game.imageO);
-            else pvpGame.imageViewTurn.setImage(game.imageX);
+//            if(startSymbol.charAt(0)=='O')pvpGame.imageViewTurn.setImage(game.imageO);
+//            else pvpGame.imageViewTurn.setImage(game.imageX);
             
             
             
@@ -672,6 +736,7 @@ public class TicTacToe extends Application {
                          {
 
      //                         button.setText(String.valueOf(gameLogic.getPos(x,y).getValue()));
+                             gameData.getGameMoves().addMove(x, y,gameLogic.getPos(x, y).getValue());
                              if(gameLogic.getPos(x, y).getValue()=='X')
                              imageView.setImage(game.imageX);
                              else
@@ -680,9 +745,27 @@ public class TicTacToe extends Application {
                          if(gameLogic.isWin())
                          {
                              System.out.println("winner");
-     //                         winLabel.setText("player win");
+                             char c=gameData.getGameMoves().getMoves().lastElement().getValue();
+                             System.out.println("last ele=" +gameData.getGameMoves().getMoves().lastElement().getX());
+                             System.out.println("c===="+c);
+                             if(c=='X')
+                                  gameData.setWinnerName(player.getName());
+                             else 
+                                 gameData.setWinnerName(gameData.getVsPlayerName());
 //                             highlightWin(Color.GREEN,gameLogic);
      //                         disableAllBtns();
+     
+                        if(gameData!=null)
+                        try {
+                                 db.PushGame(gameData);
+                                 if(isNew)db.pushPlayer(player);
+                                 else db.updatePlayerData(player);
+                             } catch (SQLException ex) {
+                                 ex.printStackTrace();
+                             }
+     
+     
+                            
                          }
                           
                      }
@@ -694,17 +777,17 @@ public class TicTacToe extends Application {
         
     }
 
-    public GameData getGameData() {
-        return gameData;
-    }
-
-    public PlayerData getPlayer() {
-        return player;
-    }
-
-    public DB getDb() {
-        return db;
-    }
+//    public GameData getGameData() {
+//        return gameData;
+//    }
+//
+//    public PlayerData getPlayer() {
+//        return player;
+//    }
+//
+//    public DB getDb() {
+//        return db;
+//    }
     
     
      

@@ -36,7 +36,7 @@ public  class Records extends ScrollPane {
     Vector<Button> buttons=new Vector<>() ;
     
     DB db;
-    Vector<GameData> games;
+    public Vector<GameData> games;
     Game gm;
     Scene ss;
     public ReplayGame rg;
@@ -56,43 +56,43 @@ public  class Records extends ScrollPane {
         button7 = new Button();
         imageView0 = new ImageView();
         
-        db=new DB();
-        games=db.getAllRecords();
-        System.out.println(games.size());
-        int size=db.getAllRecords().size();
-        for(int i=0;i<size;i++)
-        {
-            buttons.add(new Button(games.elementAt(i).getName()));
-        }
-        pane.setMinHeight(pane.getHeight()+650);
-        boolean color=true;
-        float y=115.0f;
-        for(Button btn : buttons )
-        {
-            pane.setLeftAnchor(btn, 256.0);
-            pane.setRightAnchor(btn, 268.0);
-            btn.setLayoutX(256.0);
-            btn.setLayoutY(y+=65);
-            btn.setMnemonicParsing(false);
-            btn.setPrefHeight(44.0);
-            btn.setPrefWidth(266.0);
-            if(color)
-            {
-                 btn.getStyleClass().add("button2");
-                 color=false;
-            }
-            else
-                
-            {
-                btn.getStyleClass().add("button1");
-                color=true;
-
-            }
-            
-            pane.getChildren().add(btn);
-               
-            
-        }
+//        db=new DB();
+////        games=db.getAllRecords();
+//        System.out.println(games.size());
+//        int size=db.getAllRecords().size();
+//        for(int i=0;i<size;i++)
+//        {
+//            buttons.add(new Button(games.elementAt(i).getName()));
+//        }
+//        pane.setMinHeight(pane.getHeight()+650);
+//        boolean color=true;
+//        float y=115.0f;
+//        for(Button btn : buttons )
+//        {
+//            pane.setLeftAnchor(btn, 256.0);
+//            pane.setRightAnchor(btn, 268.0);
+//            btn.setLayoutX(256.0);
+//            btn.setLayoutY(y+=65);
+//            btn.setMnemonicParsing(false);
+//            btn.setPrefHeight(44.0);
+//            btn.setPrefWidth(266.0);
+//            if(color)
+//            {
+//                 btn.getStyleClass().add("button2");
+//                 color=false;
+//            }
+//            else
+//                
+//            {
+//                btn.getStyleClass().add("button1");
+//                color=true;
+//
+//            }
+//            
+//            pane.getChildren().add(btn);
+//               
+//            
+//        }
 
         setMaxHeight(USE_PREF_SIZE);
         setMaxWidth(USE_PREF_SIZE);
@@ -267,21 +267,26 @@ public  class Records extends ScrollPane {
     {
         int counter;
         RecordTimer timer;
-        GameLogic gameLogic= new GameLogic();
+        GameLogic gameLogic;
+        GameData game;
         
         public ReplayGame() throws SQLException
         {
             games = db.getAllRecords();
             timer=new RecordTimer();
             counter=0;
+             game= games.elementAt(idx);
+            gameLogic = new GameLogic(game.getStartSymbol().charAt(0));
             timer.start();
         }
         
         
        public void startReplay()
         {
-            System.out.println("here");
-            GameData game= games.elementAt(idx);
+            
+//            GameData game= games.elementAt(idx);
+            System.out.println("start= "+game.getStartSymbol().charAt(0));
+//            gameLogic = new GameLogic(game.getStartSymbol().charAt(0));
             
             for(BoardPostion pos : game.getGameMoves().getMoves())
             {
@@ -328,6 +333,56 @@ public  class Records extends ScrollPane {
                 startReplay();
                 
             }
+        }
+    }
+    
+    public void refreshGames() throws SQLException
+    {
+        //remove all prevoius btns
+        for(Button btn : buttons)
+        {
+            pane.getChildren().remove(btn);
+            
+        }
+        //remove btns form th vector
+        buttons.removeAllElements(); 
+        db=new DB();
+        games=db.getAllRecords();
+//        games=db.getAllRecords();
+        System.out.println(games.size());
+        int size=db.getAllRecords().size();
+        for(int i=0;i<size;i++)
+        {
+            buttons.add(new Button(games.elementAt(i).getName()));
+        }
+        pane.setMinHeight(pane.getHeight()+650);
+        boolean color=true;
+        float y=115.0f;
+        for(Button btn : buttons )
+        {
+            pane.setLeftAnchor(btn, 256.0);
+            pane.setRightAnchor(btn, 268.0);
+            btn.setLayoutX(256.0);
+            btn.setLayoutY(y+=65);
+            btn.setMnemonicParsing(false);
+            btn.setPrefHeight(44.0);
+            btn.setPrefWidth(266.0);
+            if(color)
+            {
+                 btn.getStyleClass().add("button2");
+                 color=false;
+            }
+            else
+                
+            {
+                btn.getStyleClass().add("button1");
+                color=true;
+
+            }
+            
+            pane.getChildren().add(btn);
+               
+            
         }
     }
     

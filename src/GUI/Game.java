@@ -1,6 +1,7 @@
 package GUI;
 
 import GameLogic.BoardPostion;
+import java.sql.SQLException;
 import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -379,21 +380,28 @@ public class Game extends Pane {
             
         // handeling alert on clicking save
         
-            btnSave.setOnAction(e -> {
-                
-                    TextInputDialog dialog = new TextInputDialog("Enter Game Name Here");
-                    dialog.setTitle("Save Game");
-                    dialog.setHeaderText("Please Enter your Game Name:");
-                    dialog.setContentText(null);
-                    dialog.setGraphic(null);
-
-                    // Traditional way to get the response value.
-                    Optional<String> result = dialog.showAndWait();
-                    if (result.isPresent()){
-                        
-                        System.out.println("Your game name: " + result.get());
-                    }
-                
+//            btnSave.setOnAction(e -> {
+//                
+//                    TextInputDialog dialog = new TextInputDialog("Enter Game Name Here");
+//                    dialog.setTitle("Save Game");
+//                    dialog.setHeaderText("Please Enter your Game Name:");
+//                    dialog.setContentText(null);
+//                    dialog.setGraphic(null);
+//
+//                    // Traditional way to get the response value.
+//                    Optional<String> result = dialog.showAndWait();
+//                    if (result.isPresent()){
+//                        
+//                        System.out.println("Your game name: " + result.get());
+//                    }
+//                    
+//                    try {
+//                                 TicTacToe.db.PushGame(gameData);
+//                                 if(isNew)db.pushPlayer(player);
+//                                 else db.updatePlayerData(player);
+//                             } catch (SQLException ex) {
+//                                 ex.printStackTrace();
+//                             }
 //                 Alert a = new Alert(AlertType.CONFIRMATION); 
 //                 a.setContentText("Do You Want To Save ?"); 
 //                 a.setGraphic(null);
@@ -402,7 +410,7 @@ public class Game extends Pane {
 //                 a.setTitle("Save");
 //                 a.show();
 
-            });
+//            });
             
              
             

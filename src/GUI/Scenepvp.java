@@ -102,4 +102,9 @@ public class Scenepvp extends Pane {
         
 
     }
+
+    public TextField getTextField() {
+        return textField;
+    }
+    
 }
