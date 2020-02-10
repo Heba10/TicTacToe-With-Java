@@ -48,10 +48,9 @@ public class Game extends Pane {
     protected final ImageView scoreXiv;
     protected final ImageView scoreOiv;
     protected final ImageView drawsiv;
+    
     protected final Button btnRecord;
     protected final ImageView ivRecord;
-    protected final Button btnSave;
-    protected final ImageView ivSave;
     protected final Button backbtn;
     protected final ImageView backbtnImage;
     protected final ImageView[][] GUIBoard;
@@ -94,12 +93,10 @@ public class Game extends Pane {
         scoreXiv = new ImageView();
         scoreOiv = new ImageView();
         drawsiv = new ImageView();
-        btnRecord = new Button();
-        ivRecord = new ImageView();
         backbtn = new Button();
         backbtnImage = new ImageView();
-        btnSave = new Button();
-        ivSave = new ImageView();
+        btnRecord = new Button();
+        ivRecord = new ImageView();
         imageViewTurn = new ImageView();
         imageX=new Image(getClass().getResource("images/x.png").toExternalForm());
         imageO=new Image(getClass().getResource("images/O.png").toExternalForm());
@@ -279,24 +276,6 @@ public class Game extends Pane {
         drawsiv.setPickOnBounds(true);
         drawsiv.setPreserveRatio(true);
         drawsiv.setImage(new Image(getClass().getResource("images/draw.png").toExternalForm()));
-
-        btnRecord.setLayoutX(50.0);
-        btnRecord.setLayoutY(360.0);
-        btnRecord.setMnemonicParsing(false);
-        btnRecord.setPrefHeight(49.0);
-        btnRecord.setPrefWidth(44.0);
-        btnRecord.setStyle("-fx-background-color: white;");
-        btnRecord.setGraphic(ivRecord);
-        btnRecord.setCursor(Cursor.HAND);
-
-        ivRecord.setFitHeight(73.0);
-        ivRecord.setFitWidth(75.0);
-        ivRecord.setLayoutX(45.0);
-        ivRecord.setLayoutY(340.0);
-        ivRecord.setPickOnBounds(true);
-        ivRecord.setPreserveRatio(true);
-        ivRecord.setImage(new Image(getClass().getResource("images/record.png").toExternalForm()));
-        
         
         backbtn.setLayoutX(48.0);
         backbtn.setLayoutY(38.0);
@@ -315,20 +294,20 @@ public class Game extends Pane {
         backbtn.setCursor(Cursor.HAND);
         
         
-        btnSave.setLayoutX(55.0);
-        btnSave.setLayoutY(430.0);
-        btnSave.setMnemonicParsing(false);
-        btnSave.setPrefHeight(50.0);
-        btnSave.setPrefWidth(50.0);
-        btnSave.setStyle("-fx-background-color: white;");
-        btnSave.setCursor(Cursor.HAND);
+        btnRecord.setLayoutX(40.0);
+        btnRecord.setLayoutY(350.0);
+        btnRecord.setMnemonicParsing(false);
+        btnRecord.setPrefHeight(80.0);
+        btnRecord.setPrefWidth(80.0);
+        btnRecord.setStyle("-fx-background-color: white;");
+        btnRecord.setCursor(Cursor.HAND);
 
-        ivSave.setFitHeight(50.0);
-        ivSave.setFitWidth(50.0);
-        ivSave.setPickOnBounds(true);
-        ivSave.setPreserveRatio(true);
-        ivSave.setImage(new Image(getClass().getResource("images/save.png").toExternalForm()));
-        btnSave.setGraphic(ivSave);
+        ivRecord.setFitHeight(80.0);
+        ivRecord.setFitWidth(80.0);
+        ivRecord.setPickOnBounds(true);
+        ivRecord.setPreserveRatio(true);
+        ivRecord.setImage(new Image(getClass().getResource("images/record.png").toExternalForm()));
+        btnRecord.setGraphic(ivRecord);
         
         
         labelX.setLayoutX(80);
@@ -337,7 +316,7 @@ public class Game extends Pane {
         labelX.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
         
         
-        labelO.setLayoutX(40.0);
+        labelO.setLayoutX(80.0);
         labelO.setLayoutY(220.0);
         labelO.setText("0");
         labelO.setFont(Font.loadFont(Scene1.class.getResource("Fonts/z-arista.alternate.ttf").toExternalForm(), 25));
@@ -380,10 +359,10 @@ public class Game extends Pane {
             
         // handeling alert on clicking save
         
-//            btnSave.setOnAction(e -> {
+//            btnRecord.setOnAction(e -> {
 //                
 //                    TextInputDialog dialog = new TextInputDialog("Enter Game Name Here");
-//                    dialog.setTitle("Save Game");
+//                    dialog.setTitle("Record Game");
 //                    dialog.setHeaderText("Please Enter your Game Name:");
 //                    dialog.setContentText(null);
 //                    dialog.setGraphic(null);
@@ -403,11 +382,11 @@ public class Game extends Pane {
 //                                 ex.printStackTrace();
 //                             }
 //                 Alert a = new Alert(AlertType.CONFIRMATION); 
-//                 a.setContentText("Do You Want To Save ?"); 
+//                 a.setContentText("Do You Want To Record ?"); 
 //                 a.setGraphic(null);
 //                 a.setHeaderText(null);
 //                 a.setResizable(false);
-//                 a.setTitle("Save");
+//                 a.setTitle("Record");
 //                 a.show();
 
 //            });
@@ -432,10 +411,8 @@ public class Game extends Pane {
         getChildren().add(scoreXiv);
         getChildren().add(scoreOiv);
         getChildren().add(drawsiv);
-        getChildren().add(btnRecord);
-        getChildren().add(ivSave);
-        getChildren().add(btnSave);
         getChildren().add(ivRecord);
+        getChildren().add(btnRecord);
         getChildren().add(backbtn);
         getChildren().add(labelX);
         getChildren().add(labelO);

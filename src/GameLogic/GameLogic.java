@@ -90,6 +90,10 @@ public class GameLogic
             }
            
         }
+        isWin=false;
+        winPostions=new BoardPostion[3];
+        moves=0;
+        changeSymbol();
     }
     
    public boolean checkForWin()

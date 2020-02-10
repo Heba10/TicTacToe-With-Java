@@ -33,6 +33,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.swing.Action;
 
@@ -43,6 +44,7 @@ import javax.swing.Action;
  */
 public class TicTacToe extends Application {
     Game game;
+    Game gameRec;
     String startSymbol;
     Game pvpGame;    
     public DB db;
@@ -51,6 +53,7 @@ public class TicTacToe extends Application {
    boolean isNew;
    Scenepvp pvp;
    boolean isgame;
+   ChooseScene choose;
    
     @Override
     public void start(Stage stage) throws Exception {
@@ -66,7 +69,7 @@ public class TicTacToe extends Application {
         SceneStart start = new SceneStart();
         Scene scStart = new Scene(start);
         
-        ChooseScene choose = new ChooseScene();
+         choose = new ChooseScene();
         Scene scChoose = new Scene(choose);
         
          pvp = new Scenepvp();
@@ -90,7 +93,7 @@ public class TicTacToe extends Application {
         db=new DB();
         //
        
-        player=new PlayerData();
+        player = new PlayerData();
 
         
         //Adding Style Sheets
@@ -144,11 +147,9 @@ public class TicTacToe extends Application {
          //record list buttons handler
          class BtnHandler implements EventHandler<ActionEvent>
             {
-//                
                 int idx;
                 BtnHandler(int idx) 
                 {
-//                    this.btn=btn;
                     this.idx=idx;  
                 }
 
@@ -158,28 +159,51 @@ public class TicTacToe extends Application {
                     System.out.println("handel fun");
                       try
                     {
-                       rec.runTimer(game,idx);
+                       
+                       gameRec = new Game();
+                       Scene scRec = new Scene(gameRec);
 
-//                       Scene scRec = new Scene(game);
-                       stage.setScene(gm);
+                        gameRec.ivRecord.setImage(null);
+                        gameRec.btnRecord.setCursor(Cursor.DEFAULT);
+                        gameRec.btnRecord.setStyle("-fx-background-color: Transparent;");
+
+                        gameRec.drawsiv.setFitHeight(150.0);
+                        gameRec.drawsiv.setFitWidth(350.0);
+                        gameRec.drawsiv.setLayoutX(-10.0);
+                        gameRec.drawsiv.setLayoutY(280.0);
+
+                        gameRec.drawsiv.setImage(new Image(getClass().getResource("images/playing.gif").toExternalForm()));
+
+                        gameRec.scoreOiv.setImage(null);
+                        gameRec.scoreXiv.setImage(null); 
+
+                        gameRec.labelD.setText("Playing");
+                        gameRec.labelD.setLayoutX(60.0);
+                        gameRec.labelD.setLayoutY(230.0);
+                        
+                        gameRec.labelX.setText("Record");
+                        gameRec.labelX.setLayoutX(60.0);
+                        gameRec.labelX.setLayoutY(270.0);
+                        
+                        gameRec.labelO.setText("");
+                               
+                        gameRec.backbtn.setOnAction(ev ->
+                         {
+                             stage.setScene(sc2);
+                             stage.show(); 
+                         });
+     
+                       rec.runTimer(gameRec,idx);
+                       stage.setScene(scRec);
                        stage.show();
 
                     } catch (SQLException ex)
                     {
                         ex.printStackTrace();
-                    }
-         
-//                    game.backbtn.setOnAction(ev ->
-//                    {
-//                        stage.setScene(sc2);
-//                        stage.show(); 
-//                    });
+                    }       
                 }
             }
             
-            
-            
-         
          
          
          scene2.btnViewRecords.setOnAction(e -> {
@@ -195,6 +219,14 @@ public class TicTacToe extends Application {
             }
              stage.setScene(recScene);
              stage.show();
+         });
+         
+         
+         scene2.btnViewScores.setOnAction(e -> {
+             Scores scr = new Scores();
+             Scene scoresc = new Scene(scr);
+             stage.setScene(scoresc);
+             stage.show(); 
          });
          ///////////////
          
@@ -286,9 +318,12 @@ public class TicTacToe extends Application {
             
         //choose x or o scene buttons handeling
             choose.btnX.setOnAction(e -> {
+                
                 stage.setScene(gm);
                 startSymbol="X";
-                new GameBuilder();
+                
+                new GameBuilder(stage);
+//                resetGUI();
                 System.out.println(isNew);
             try {
                 gameData=new GameData(db.getLastGameIndex(),startSymbol);
@@ -303,8 +338,9 @@ public class TicTacToe extends Application {
        
             choose.btnO.setOnAction(e -> {
                 stage.setScene(gm);
+//                resetGUI();
                 startSymbol="O";
-                new GameBuilder();
+                new GameBuilder(stage);
             try {
                 gameData=new GameData(db.getLastGameIndex(),startSymbol);
             } catch (SQLException ex) {
@@ -313,11 +349,10 @@ public class TicTacToe extends Application {
                  player.incVsCompCount();
                 gameData.setVsPlayerName("computer");
                 gameData.setStartedPlayerName(player.getName());
-                
-
+ 
             });
             
-            game.btnSave.setOnAction(e -> {
+            game.btnRecord.setOnAction(e -> {
                 
                     TextInputDialog dialog = new TextInputDialog("Enter Game Name Here");
                     dialog.setTitle("Save Game");
@@ -338,74 +373,16 @@ public class TicTacToe extends Application {
                                  else db.updatePlayerData(player);
                              } catch (SQLException ex) {
                                  ex.printStackTrace();
-                             }
-                        
-                    }
-                    
+                             }  
+                    }         
+                    game.ivRecord.setImage(new Image(getClass().getResource("images/pulse.gif").toExternalForm()));
                     
             });
             
+           
             
-//         rec.button.setOnAction((ActionEvent myevent) -> {
-//         Game game2 = new Game();
-//            try {
-//                rec.runTimer(game2,1);
-//                
-//                Scene scRec = new Scene(game2);
-//                stage.setScene(scRec);
-//                stage.show();
-//                
-//            } catch (SQLException ex) {
-//                Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//         
-//            game.backbtn.setOnAction(ev -> {
-//            
-//                stage.setScene(sc2);
-//                stage.show(); 
-//            
-//            });
-//          
-//                   
-//         
-//         game.ivSave.setImage(null);
-//         game.btnSave.setCursor(Cursor.DEFAULT);
-//         
-//         
-//         game.ivRecord.setImage(null);
-//         game.btnRecord.setCursor(Cursor.DEFAULT);
-//         
-//         game.drawsiv.setImage(null);
-//         game.scoreOiv.setImage(null);
-//         game.scoreXiv.setImage(null);
-//         
-//         
-//         game.labelD.setText("");
-//         game.labelX.setText("");
-//         game.labelO.setText("");
-//         
-//         
-//                
-//         });
-         
-         
-         
-         
+
          //handler
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-            
-        //////////////////
-            
-            
          
          //baaack sction 
             //Scene2 back button action
@@ -471,23 +448,19 @@ public class TicTacToe extends Application {
                           ex.printStackTrace();
                         }
                     isgame=false;
-                 }
-                 
-                 
-                 
+                 }     
             });
              
-             
-    
-             
-             
+             rec.backbtn.setOnAction(e -> {
+                stage.setScene(sc2);
+                stage.show(); 
+             });
+
         stage.setTitle("GAMSH Tic Tac Toe");
         stage.setScene(sc1);
         stage.show();
         stage.setResizable(false); 
     }
-
-
 
     
     public static void main(String[] args) {
@@ -502,15 +475,18 @@ public class TicTacToe extends Application {
             {
                 game.GUIBoard[i][j].imageProperty().set(null);
             }
-        }
-        
+        } 
     }
+    
+    
+    
+    
     
     class GameBuilder
     {
         GameLogic gameLogic;
-
-        public GameBuilder()
+        Stage myStage;
+        public GameBuilder(Stage stage)
         {
             gameLogic=new GameLogic(startSymbol.charAt(0));
             
@@ -526,12 +502,12 @@ public class TicTacToe extends Application {
             game.btn21.setOnAction(new EventHandel(2, 1, game. view21));
             game.btn22.setOnAction(new EventHandel(2, 2,  game.view22));
             
+            myStage = stage;
         }
         
        class EventHandel implements EventHandler<ActionEvent>
        {
             protected int x,y;
-
             ImageView imageView;
             public EventHandel(int x,int y,ImageView imageView)
             {
@@ -543,7 +519,9 @@ public class TicTacToe extends Application {
             @Override
             public void handle(ActionEvent event)
             {
-
+                
+               
+                
                 if(!gameLogic.isFill()&&gameLogic.getPos(x, y).getValue()=='-')
                  {
                      if(!gameLogic.isWin())
@@ -561,10 +539,8 @@ public class TicTacToe extends Application {
                          }
                          if(gameLogic.isWin())
                          {
-     //                         winLabel.setText("player win");
                              System.out.println(isNew);
                              highlightWin(Color.GREEN,gameLogic);
-     //                         disableAllBtns();
                             gameData.setWinnerName(player.getName());
                             player.incScore();
                             
@@ -578,41 +554,56 @@ public class TicTacToe extends Application {
                                 Integer value= Integer.parseInt(game.labelO.getText())+1;
                                 game.labelO.setText(value.toString());
                             }
-                             
-                             
-                             
-                             System.out.println("player win");
-                             
-                             
                             
-                                 
+                            
+                            // After Winning Celebrations
+                            
+                            Win win = new Win( game, myStage, gameLogic,choose);
+                            
+                            
+                           
+                            
+                            win.playBtn.setOnAction( ev -> {
+
+          //            for (int i = 0; i < 3; i++)
+          //                for(int j = 0; j < 3 ; j++)
+          //                {
+          //                    currentGame.GUIBoard[i][j].setImage(null);
+          //                }
+
+                              gameLogic.resetBoard();
+//                              Game newGame = new Game();
+//                              Scene nGScene = new Scene(newGame);
+//
+//                              myStage.setScene(nGScene);
+
+                              win.window.close();
+
+                          });
+                            
+                                
+                            
+                              
                          }
                          else if(gameLogic.isFill())
                          {
                              System.out.println("draw");
-                             gameData.setWinnerName("draw");
+                             gameData.setWinnerName("draw"); 
                              
                          }
                          else
                          {
                              
                               drawComputerMove();
-
-                         
                          }
-//                             imageView.setImage(game.imageO);
                      }
                      if(gameLogic.isWin())
                      {
-//                         winLabel.setText("player win");
-                            highlightWin(Color.GREEN,gameLogic);
-//                         disableAllBtns();
-                           
+                            highlightWin(Color.GREEN,gameLogic);   
                      }
                  }
                 
-             
-            
+ 
                 if(gameLogic.isFill()&&!gameLogic.isWin())
 
                 {
@@ -625,10 +616,8 @@ public class TicTacToe extends Application {
                 game.winPostions =gLogic.getWinPostions();
                 for (int i = 0; i < 3; i++)
                 {
-
                  int x=game.winPostions[i].getX();
                  int y=game.winPostions[i].getY();
-       //          game.GUIBoard[x][y].setBackground(new Background(new BackgroundFill(c, CornerRadii.EMPTY, Insets.EMPTY)));
                 }
             }
 
@@ -662,9 +651,6 @@ public class TicTacToe extends Application {
                     Integer value= Integer.parseInt(game.labelO.getText())+1;
                     game.labelO.setText(value.toString());
                 }
-              
-               
-               
                
            }
         
@@ -673,10 +659,7 @@ public class TicTacToe extends Application {
      }
         
     }
-    
-   
     }
-    
     
      class VsLocalPlayerBuilder 
     {
@@ -691,25 +674,19 @@ public class TicTacToe extends Application {
             gameData.setStartedPlayerName(player.getName());
             player.incVsPlayerCount();
             
-//            if(startSymbol.charAt(0)=='O')pvpGame.imageViewTurn.setImage(game.imageO);
-//            else pvpGame.imageViewTurn.setImage(game.imageX);
-            
-            
-            
+   
             pvpGame.btn00.setOnAction(new EventHandleVslocal(0,0,pvpGame.view00));
             pvpGame.btn01.setOnAction(new EventHandleVslocal(0,1,pvpGame.view01));
-             pvpGame.btn02.setOnAction(new EventHandleVslocal(0,2, pvpGame.view02));
-             pvpGame.btn10.setOnAction(new EventHandleVslocal(1,0, pvpGame.view10));
-             pvpGame.btn11.setOnAction(new EventHandleVslocal(1, 1, pvpGame. view11));
-             pvpGame.btn12.setOnAction(new EventHandleVslocal(1, 2, pvpGame. view12));
-             pvpGame.btn20.setOnAction(new EventHandleVslocal(2, 0,  pvpGame.view20));
-             pvpGame.btn21.setOnAction(new EventHandleVslocal(2, 1, pvpGame. view21));
-             pvpGame.btn22.setOnAction(new EventHandleVslocal(2, 2,  pvpGame.view22));
+            pvpGame.btn02.setOnAction(new EventHandleVslocal(0,2, pvpGame.view02));
+            pvpGame.btn10.setOnAction(new EventHandleVslocal(1,0, pvpGame.view10));
+            pvpGame.btn11.setOnAction(new EventHandleVslocal(1, 1, pvpGame. view11));
+            pvpGame.btn12.setOnAction(new EventHandleVslocal(1, 2, pvpGame. view12));
+            pvpGame.btn20.setOnAction(new EventHandleVslocal(2, 0,  pvpGame.view20));
+            pvpGame.btn21.setOnAction(new EventHandleVslocal(2, 1, pvpGame. view21));
+            pvpGame.btn22.setOnAction(new EventHandleVslocal(2, 2,  pvpGame.view22));
             
         }
         
-        
-
         class EventHandleVslocal implements EventHandler<ActionEvent>
         {
             
@@ -763,36 +740,13 @@ public class TicTacToe extends Application {
                              } catch (SQLException ex) {
                                  ex.printStackTrace();
                              }
-     
-     
-                            
-                         }
-                          
+                         } 
                      }
                  }
-               
             }
-            
         }
-        
     }
-
-//    public GameData getGameData() {
-//        return gameData;
-//    }
-//
-//    public PlayerData getPlayer() {
-//        return player;
-//    }
-//
-//    public DB getDb() {
-//        return db;
-//    }
-    
-    
-     
-     
-    
+   
     
 }
     

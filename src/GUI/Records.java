@@ -19,7 +19,7 @@ import javafx.scene.*;
 import javafx.scene.layout.AnchorPane;
 import sun.plugin.javascript.navig.Anchor;
 
-public  class Records extends ScrollPane {
+    public  class Records extends ScrollPane {
 
     protected final AnchorPane pane;
     protected final ImageView imageView;
@@ -33,6 +33,10 @@ public  class Records extends ScrollPane {
     protected final Button button6;
     protected final Button button7;
     protected final ImageView imageView0;
+    protected final ImageView backbtnImage;
+    protected final Button backbtn;
+    
+    
     Vector<Button> buttons=new Vector<>() ;
     
     DB db;
@@ -55,6 +59,8 @@ public  class Records extends ScrollPane {
         button6 = new Button();
         button7 = new Button();
         imageView0 = new ImageView();
+        backbtn = new Button();
+        backbtnImage = new ImageView();
         
 //        db=new DB();
 ////        games=db.getAllRecords();
@@ -111,95 +117,7 @@ public  class Records extends ScrollPane {
         imageView.setPreserveRatio(true);
         imageView.setImage(new Image(getClass().getResource("images/Rec.png").toExternalForm()));
 
-//        Pane.setLeftAnchor(button, 256.0);
-//        Pane.setRightAnchor(button, 268.0);
-//        button.setLayoutX(256.0);
-//        button.setLayoutY(115.0);
-//        button.setMnemonicParsing(false);
-//        button.setPrefHeight(44.0);
-//        button.setPrefWidth(266.0);
-//        button.getStyleClass().add("button2");
-//        button.setText("Game Name 1");
 
-//        Pane.setLeftAnchor(button0, 256.0);
-//        Pane.setRightAnchor(button0, 268.0);
-//        button0.setLayoutX(256.0);
-//        button0.setLayoutY(179.0);
-//        button0.setMnemonicParsing(false);
-//        button0.setPrefHeight(44.0);
-//        button0.setPrefWidth(266.0);
-//        button0.getStyleClass().add("button1");
-//        button0.setText("Game Name 2");
-
-//        Pane.setLeftAnchor(button1, 256.0);
-//        Pane.setRightAnchor(button1, 268.0);
-//        button1.setLayoutX(256.0);
-//        button1.setLayoutY(243.0);
-//        button1.setMnemonicParsing(false);
-//        button1.setPrefHeight(44.0);
-//        button1.setPrefWidth(266.0);
-//        button1.getStyleClass().add("button2");
-//        button1.setText("Game Name 3");
-
-//        Pane.setLeftAnchor(button2, 256.0);
-//        Pane.setRightAnchor(button2, 268.0);
-//        button2.setLayoutX(256.0);
-//        button2.setLayoutY(307.0);
-//        button2.setMnemonicParsing(false);
-//        button2.setPrefHeight(44.0);
-//        button2.setPrefWidth(266.0);
-//        button2.getStyleClass().add("button1");
-//        button2.setText("Game Name 4");
-
-//        Pane.setLeftAnchor(button3, 256.0);
-//        Pane.setRightAnchor(button3, 268.0);
-//        button3.setLayoutX(256.0);
-//        button3.setLayoutY(371.0);
-//        button3.setMnemonicParsing(false);
-//        button3.setPrefHeight(44.0);
-//        button3.setPrefWidth(266.0);
-//        button3.getStyleClass().add("button2");
-//        button3.setText("Game Name 5");
-
-//        Pane.setLeftAnchor(button4, 256.0);
-//        Pane.setRightAnchor(button4, 268.0);
-//        button4.setLayoutX(256.0);
-//        button4.setLayoutY(435.0);
-//        button4.setMnemonicParsing(false);
-//        button4.setPrefHeight(44.0);
-//        button4.setPrefWidth(266.0);
-//        button4.getStyleClass().add("button1");
-//        button4.setText("Game Name 6");
-
-//        Pane.setLeftAnchor(button5, 256.0);
-//        Pane.setRightAnchor(button5, 268.0);
-//        button5.setLayoutX(256.0);
-//        button5.setLayoutY(499.0);
-//        button5.setMnemonicParsing(false);
-//        button5.setPrefHeight(44.0);
-//        button5.setPrefWidth(266.0);
-//        button5.getStyleClass().add("button2");
-//        button5.setText("Game Name 7");
-
-//        Pane.setLeftAnchor(button6, 256.0);
-//        Pane.setRightAnchor(button6, 268.0);
-//        button6.setLayoutX(256.0);
-//        button6.setLayoutY(559.0);
-//        button6.setMnemonicParsing(false);
-//        button6.setPrefHeight(44.0);
-//        button6.setPrefWidth(266.0);
-//        button6.getStyleClass().add("button1");
-//        button6.setText("Game Name 8");
-
-//        Pane.setLeftAnchor(button7, 256.0);
-//        Pane.setRightAnchor(button7, 268.0);
-//        button7.setLayoutX(256.0);
-//        button7.setLayoutY(620.0);
-//        button7.setMnemonicParsing(false);
-//        button7.setPrefHeight(44.0);
-//        button7.setPrefWidth(266.0);
-//        button7.getStyleClass().add("button2");
-//        button7.setText("Game Name 8");
 
         imageView0.setFitHeight(154.0);
         imageView0.setFitWidth(209.0);
@@ -209,48 +127,31 @@ public  class Records extends ScrollPane {
         imageView0.setPreserveRatio(true);
         imageView0.setImage(new Image(getClass().getResource("images/logo.png").toExternalForm()));
         setContent(pane);
+        
+        
+        backbtn.setLayoutX(48.0);
+        backbtn.setLayoutY(100.0);
+        backbtn.setMnemonicParsing(false);
+        backbtn.setPrefHeight(45.0);
+        backbtn.setPrefWidth(37.0);
+        backbtn.setStyle("-fx-background-color: white;");
+        
+        
+        backbtnImage.setFitHeight(40.0);
+        backbtnImage.setFitWidth(22.0);
+        backbtnImage.setPickOnBounds(true);
+        backbtnImage.setPreserveRatio(true);
+        backbtnImage.setImage(new Image(getClass().getResource("images/back.png").toExternalForm()));
+        backbtn.setGraphic(backbtnImage);
+        backbtn.setCursor(Cursor.HAND);
+        
+        
 
         pane.getChildren().add(imageView);
-//        pane.getChildren().add(button);
-//        pane.getChildren().add(button0);
-//        pane.getChildren().add(button1);
-//        pane.getChildren().add(button2);
-//        pane.getChildren().add(button3);
-//        pane.getChildren().add(button4);
-//        pane.getChildren().add(button5);
-//        pane.getChildren().add(button6);
-//        pane.getChildren().add(button7);
         pane.getChildren().add(imageView0);
+        pane.getChildren().add(backbtn);
         
-        button.setOnAction(e->{
 
-
-         
-         
-        
-        
-        //back button
-        
-        
-//         gm.backbtn.setOnAction(event -> {  
-//                
-//                //remove image after click back
-//                    
-//                    scstr = new SceneStart();
-//                    scstr.getStylesheets().add(getClass().getResource("style.css").toString());
-//                    Scene sc = new Scene(scstr);
-//                
-//                    primaryStage.setScene(sc);
-//                    replay.timer.stop();
-//        
-//        });        
-        
-        
-        });
-        
-        
-         //back button
-         
 
 
     }
