@@ -731,6 +731,7 @@ public class TicTacToe extends Application {
                                  gameData.setWinnerName(gameData.getVsPlayerName());
 //                             highlightWin(Color.GREEN,gameLogic);
      //                         disableAllBtns();
+                                player.incScore();
      
                         if(gameData!=null)
                         try {
