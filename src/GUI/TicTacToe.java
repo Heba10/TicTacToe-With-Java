@@ -11,11 +11,13 @@ import Database.GameData;
 import Database.PlayerData;
 import GameLogic.BoardPostion;
 import GameLogic.GameLogic;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Optional;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -36,6 +38,11 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.swing.Action;
+import network.Client;
+import network.ClientSocket;
+import network.Server;
+import network.Serversocket;
+import network.*;
 
 
 /**
@@ -50,10 +57,12 @@ public class TicTacToe extends Application {
     public DB db;
    public GameData gameData;
    public PlayerData player;
-   boolean isNew;
+   boolean isNew,saveMoves=false;
    Scenepvp pvp;
    boolean isgame;
    ChooseScene choose;
+    Serversocket server;
+    ClientSocket client;
    
     @Override
     public void start(Stage stage) throws Exception {
@@ -82,7 +91,7 @@ public class TicTacToe extends Application {
         Scene gm = new Scene(game);
         
         Spinner spn = new Spinner();
-        Scene spin = new Scene(spn);
+        //Scene spin = new Scene(spn);
         
         Records rec = new Records();
         Scene recScene = new Scene(rec);
@@ -280,9 +289,32 @@ public class TicTacToe extends Application {
             
             //create game partition
             CG.button.setOnAction(e -> {
-                
                 Scenepvp online = new Scenepvp();
-                Scene scOnline = new Scene(online);
+                Scene scOnline = new Scene(spn);
+
+                stage.setScene(gm);
+                
+                stage.show();
+            try {
+                //network
+                // set scene
+                
+                 UDPServer udbServer=new UDPServer();
+                 server=new Serversocket();
+                 
+                 new OnlineGameBuilder();
+            } catch (IOException ex) {
+                Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+           
+            } catch (SQLException ex) {
+                Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+            
+                
+                
+                
+                
                 online.getStylesheets().add(getClass().getResource("style.css").toString());
                 
                 online.label.setLayoutX(170.0);
@@ -303,15 +335,28 @@ public class TicTacToe extends Application {
                     stage.show();
                 });
                 
-                // go to wait
-                online.button.setOnAction(ev ->{
-                    stage.setScene(spin);
-                    stage.show();
-                });
+//                // go to wait
+//                online.button.setOnAction(ev ->{
+//                    stage.setScene(spin);
+//                    stage.show();
+//                });
                 
-                // set scene
-                stage.setScene(scOnline);
-                stage.show();
+                
+            });
+            
+            
+            CG.button0.setOnAction(e->{
+
+            stage.setScene(gm);  
+            stage.show();
+            try {
+                 UDPClient uDPClient= new UDPClient();
+                 client=new ClientSocket();
+                 new OnlineGameBuilder();
+            } catch (Exception ex) {
+                Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
             });
             
      
@@ -366,14 +411,8 @@ public class TicTacToe extends Application {
                         
                         System.out.println("Your game name: " + result.get());
                         gameData.setName(result.get());
-                        if(gameData!=null)
-                        try {
-                                 db.PushGame(gameData);
-                                 if(isNew)db.pushPlayer(player);
-                                 else db.updatePlayerData(player);
-                             } catch (SQLException ex) {
-                                 ex.printStackTrace();
-                             }  
+                        saveMoves=true;
+                        
                     }         
                     game.ivRecord.setImage(new Image(getClass().getResource("images/pulse.gif").toExternalForm()));
                     
@@ -403,26 +442,81 @@ public class TicTacToe extends Application {
                 stage.show(); 
             });
             
-             pvp.backbtn.setOnAction(e -> {  
-                stage.setScene(scStart);
-                stage.show(); 
-            });
+//             pvp.backbtn.setOnAction(e -> {
+//                 
+//                 
+//                 
+//                stage.setScene(scStart);
+//                stage.show(); 
+//            });
+             
+             
              
              CG.backbtn.setOnAction(e -> {  
                 stage.setScene(scStart);
                 stage.show(); 
             });
              
-             game.backbtn.setOnAction(e -> {  
+             ////////////////////////////////////
+             
+             
+//             game.backbtn.setOnAction(e -> {  
+//                
+//                //remove image after click back
+//                isNew=false;
+//                saveMoves=false;
+//                
+//                
+//                Alert a = new Alert(AlertType.CONFIRMATION);
+//                
+//                a.setContentText("Are You Sure You Want To Exit ?");
+//                a.setGraphic(null);
+//                a.setHeaderText(null);
+//                 
+//                 Optional <ButtonType> result = a.showAndWait();
+//                 if (result.get() == ButtonType.OK)
+//                 {    
+//                    stage.setScene(scStart);
+//                    stage.show();
+//                    
+//                    for (int i = 0; i < 3; i++)
+//                        for(int j = 0; j < 3 ; j++)
+//                        {
+//                            game.GUIBoard[i][j].setImage(null);
+//                        }
+//                     System.out.println("is game ="+isgame);
+//                    if(gameData!=null&&isgame)
+//                    try {
+//                            gameData.setIsRecorded(0);
+//                            if(gameData.getWinnerName()==null)gameData.setWinnerName("not compeleted");
+//                            db.PushGame(gameData);
+//                            if(isNew)db.pushPlayer(player);
+//                            else db.updatePlayerData(player);
+//                        } catch (SQLException ex)
+//                        {
+//                          ex.printStackTrace();
+//                        }
+//                    isgame=false;
+//                 }
+//                 game.ivRecord.setImage(new Image(getClass().getResource("images/record.png").toExternalForm()));
+//            });
+             
+             
+             class BackBtnHandler implements EventHandler<ActionEvent>
+             {
+
+                @Override
+                public void handle(ActionEvent event)
+                {
+                     isNew=false;
+                saveMoves=false;
                 
-                //remove image after click back
-                isNew=false;
                 
-                 Alert a = new Alert(AlertType.CONFIRMATION);
+                Alert a = new Alert(AlertType.CONFIRMATION);
                 
-                 a.setContentText("Are You Sure You Want To Exit ?");
-                 a.setGraphic(null);
-                 a.setHeaderText(null);
+                a.setContentText("Are You Sure You Want To Exit ?");
+                a.setGraphic(null);
+                a.setHeaderText(null);
                  
                  Optional <ButtonType> result = a.showAndWait();
                  if (result.get() == ButtonType.OK)
@@ -448,13 +542,27 @@ public class TicTacToe extends Application {
                           ex.printStackTrace();
                         }
                     isgame=false;
-                 }     
-            });
+                 }
+                 game.ivRecord.setImage(new Image(getClass().getResource("images/record.png").toExternalForm()));
+                }
+                
+                 
+             }
+             game.backbtn.setOnAction(new BackBtnHandler());
+             pvp.backbtn.setOnAction(new BackBtnHandler());
+             
+
+             //////////////////////////
+             
+             
              
              rec.backbtn.setOnAction(e -> {
                 stage.setScene(sc2);
                 stage.show(); 
              });
+             
+             
+             
 
         stage.setTitle("GAMSH Tic Tac Toe");
         stage.setScene(sc1);
@@ -555,6 +663,9 @@ public class TicTacToe extends Application {
                                 game.labelO.setText(value.toString());
                             }
                             
+                            saveDataToDB();
+                            
+                            
                             
                             // After Winning Celebrations
                             
@@ -589,6 +700,8 @@ public class TicTacToe extends Application {
                          {
                              System.out.println("draw");
                              gameData.setWinnerName("draw"); 
+                              
+                            saveDataToDB();
                              
                          }
                          else
@@ -651,6 +764,8 @@ public class TicTacToe extends Application {
                     Integer value= Integer.parseInt(game.labelO.getText())+1;
                     game.labelO.setText(value.toString());
                 }
+               
+                saveDataToDB();
                
            }
         
@@ -741,12 +856,337 @@ public class TicTacToe extends Application {
                              } catch (SQLException ex) {
                                  ex.printStackTrace();
                              }
+                       
+                             
                          } 
                      }
                  }
             }
         }
     }
+     
+     
+    public void saveDataToDB()
+    {
+        if(gameData!=null)
+            try {
+                if(saveMoves)
+                     gameData.setIsRecorded(1);
+                     db.PushGame(gameData);
+                     if(isNew)db.pushPlayer(player);
+                     else db.updatePlayerData(player);
+                 } catch (SQLException ex) {
+                     ex.printStackTrace();
+                 }  
+    }
+    
+    
+    class OnlineGameBuilder
+    {
+        GameLogic gameLogic;
+
+        public OnlineGameBuilder() throws SQLException, IOException
+        {
+             gameLogic=new GameLogic();
+            gameData=new GameData(db.getLastGameIndex(), "X");
+//            gameData.setVsPlayerName();
+            
+                gameData.setStartSymbol("X");
+            
+//            gameData.setStartedPlayerName(player.getName());
+//            player.incVsPlayerCount();
+            game.btn00.setOnAction(new EventHandleVsOnline(0,0,game.view00));
+            game.btn01.setOnAction(new EventHandleVsOnline(0,1,game.view01));
+            game.btn02.setOnAction(new EventHandleVsOnline(0,2, game.view02));
+            game.btn10.setOnAction(new EventHandleVsOnline(1,0, game.view10));
+            game.btn11.setOnAction(new EventHandleVsOnline(1, 1, game. view11));
+            game.btn12.setOnAction(new EventHandleVsOnline(1, 2, game. view12));
+            game.btn20.setOnAction(new EventHandleVsOnline(2, 0,  game.view20));
+            game.btn21.setOnAction(new EventHandleVsOnline(2, 1, game. view21));
+            game.btn22.setOnAction(new EventHandleVsOnline(2, 2,  game.view22));
+            
+//            Platform.runLater(()->{
+                
+                
+//            if(client!=null)
+//            {
+//                System.out.println("receiving move");
+//                BoardPostion pos=new BoardPostion();
+                
+//                    System.out.println("pos receve x="+ pos.getX()+"y= "+pos.getY());
+                    
+                 ReaderThread th = new ReaderThread();
+//                 th.start();
+                 Platform.runLater(th);
+                 
+//                 NameThread th2=new NameThread();
+//                 Platform.runLater(th2);
+//                   client.receiveGameMove(pos);
+//                    
+               
+                
+////               
+//                if(gameLogic.playMove(pos.getX(), pos.getY()))
+//                    drawMove(gameLogic.getPos(pos.getX(), pos.getY()));
+                
+                
+            
+            
+           
+//            if(client!=null)
+//            {
+//                ReaderThread thread=new ReaderThread();
+//                Platform.runLater(thread);
+////                thread.run();
+//            }
+            
+           
+            
+            
+        }
+        
+        class NameThread extends Thread
+        {
+            @Override
+            public void run()
+            {
+                while(true)
+                {
+                     if(client!=null)
+                    {
+                        try {
+                            client.sendMyName(player.getName());
+                            gameData.setVsPlayerName(client.receiveOtherPlayerName());
+                            if(gameData.getVsPlayerName()!=null) break;
+
+                        } catch (IOException ex) {
+                            Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    else
+                    {
+                        try {
+                            server.sendMyName(player.getName());
+                            gameData.setVsPlayerName(server.receiveOtherPlayerName());
+                            if(gameData.getVsPlayerName()!=null) break;
+
+
+
+                        } catch (IOException ex) {
+                            Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                System.out.println("i got your name XD");
+            }
+        }
+        
+        class ReaderThread extends Thread
+         {
+            BoardPostion pos= new BoardPostion();
+            String name;
+           @Override
+           public void run()
+           {
+              
+               
+               while(!gameLogic.isWin())
+               {
+                   
+                   try {
+                       
+                       if(client!=null)
+                       {
+//                           if(name==null) name=client.receiveOtherPlayerName();
+//                           System.out.println("i got your name");
+                           System.out.println("thread running as client");
+                            client.receiveGameMove(pos);
+                            enableAllBtns();
+                       }
+                       else
+                       {
+                           System.out.println("thread running as server");
+                           server.receiveGameMove(pos);
+                           enableAllBtns();
+                       }
+                   } catch (IOException ex) {
+                       ex.printStackTrace();
+                   }
+//                    
+//                
+//               
+                if(gameLogic.playMove(pos.getX(), pos.getY()))
+                    drawMove(gameLogic.getPos(pos.getX(), pos.getY()));
+               }
+               System.out.println("thread stopped");
+                
+           }        
+                   
+                            
+                        
+                        
+                    
+                
+              
+         }
+        
+        
+        
+        class EventHandleVsOnline implements EventHandler<ActionEvent>
+        {
+            
+            protected int x,y;
+
+            ImageView imageView;
+            public EventHandleVsOnline(int x,int y,ImageView imageView)
+            {
+                this.x=x;
+                this.y=y;
+                this.imageView=imageView;
+            }
+
+             @Override
+            public void handle(ActionEvent event)
+            {
+//                System.out.println("btn is working");
+
+                if(!gameLogic.isFill()&&gameLogic.getPos(x, y).getValue()=='-')
+                 {
+                     if(!gameLogic.isWin())
+                     {
+//                         System.out.println(gameLogic.getSymbol());
+                         if(gameLogic.playMove(x, y))
+                         {
+
+     //                         button.setText(String.valueOf(gameLogic.getPos(x,y).getValue()));
+                             gameData.getGameMoves().addMove(x, y,gameLogic.getPos(x, y).getValue());
+                             if(gameLogic.getPos(x, y).getValue()=='X')
+                             imageView.setImage(game.imageX);
+                             else
+                                 imageView.setImage(game.imageO);
+                             
+                             if(server!=null) // server
+                             {
+//                                 server.setPlayerName(player.getName());
+//                                 gameData.setVsPlayerName(server.getPlayer2());
+                                try {
+//                                    System.out.println("sssssssssssssss");
+                                    server.sendGameMove(new BoardPostion(x, y));
+                                    disableAllBtns();
+                                }catch(Exception ex)
+                                {
+                                    
+                                }
+                                 
+//                                 System.out.println("after send in server");
+//                                 BoardPostion pos= new BoardPostion();
+//                                 server.receiveGameMove(pos);
+                                 
+//                                 if(gameLogic.playMove(pos.getX(), pos.getY()))
+//                                 drawMove(gameLogic.getPos(pos.getX(), pos.getY()));
+                                         
+                             }
+                             else // client
+                             {
+//                                  client.setPlayerName(player.getName());
+//                                 gameData.setVsPlayerName(client.getPlayer2());
+                                   try {
+//                                    System.out.println("sssssssssssssss");
+                                    client.sendGameMove(new BoardPostion(x, y));
+                                    disableAllBtns();
+//                                       System.out.println("client sending");
+                                }catch(Exception ex)
+                                {
+                                    
+                                }
+//                                  BoardPostion pos= new BoardPostion();
+//                                  System.out.println("client waiting to receive game");
+                                 
+//                                     client.receiveGameMove(pos);
+//                                 if(gameLogic.playMove(pos.getX(), pos.getY()))
+//                                 drawMove(gameLogic.getPos(pos.getX(), pos.getY()));
+//                                 
+//                                 client.sendGameMove(gameLogic.getPos(x, y));
+                                 
+                                
+                                 
+                                 
+                             }
+                             
+                         }
+                         if(gameLogic.isWin())
+                         {
+                             System.out.println("winner");
+                             char c=gameData.getGameMoves().getMoves().lastElement().getValue();
+//                             System.out.println("last ele=" +gameData.getGameMoves().getMoves().lastElement().getX());
+//                             System.out.println("c===="+c);
+                             if(c=='X')
+                                  gameData.setWinnerName(player.getName());
+                             else 
+                                 gameData.setWinnerName(gameData.getVsPlayerName());
+//                             highlightWin(Color.GREEN,gameLogic);
+     //                         disableAllBtns();
+                                player.incScore();
+     
+                        if(gameData!=null)
+                        try {
+                                 db.PushGame(gameData);
+                                 if(isNew)db.pushPlayer(player);
+                                 else db.updatePlayerData(player);
+                             } catch (SQLException ex) {
+                                 ex.printStackTrace();
+                             }
+                       
+                             
+                         } 
+                     }
+                 }
+            }
+            
+          
+        }
+        
+        public void drawMove(BoardPostion pos)
+        {
+            if(pos.getValue()=='X')
+                game.GUIBoard[pos.getX()][pos.getY()].setImage(game.imageX);
+            else
+                game.GUIBoard[pos.getX()][pos.getY()].setImage(game.imageO);
+        }
+        
+        public void disableAllBtns()
+        {
+            System.out.println("disable fun");
+           for(int i=0;i<3;i++)
+           {
+               for(int j=0;j<3;j++)
+               {
+                   game.GUIBoardBtns[i][j].setDisable(true);
+                   
+               }
+           }
+        }
+        
+        public void enableAllBtns()
+        {
+             System.out.println("enable fun");
+           for(int i=0;i<3;i++)
+           {
+               for(int j=0;j<3;j++)
+               {
+                  
+                   game.GUIBoardBtns[i][j].setDisable(false);
+                   
+               }
+           }
+        }
+        
+        
+    
+    }
+    
+    
+    
    
     
 }

@@ -15,7 +15,7 @@ public class BoardPostion
    char value;
 
     public BoardPostion() {
-        x=y=0;
+        x=y=-1;
         value='-';
     }
     

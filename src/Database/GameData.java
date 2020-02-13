@@ -29,7 +29,7 @@ public class GameData {
          startedPlayerName=null;
          winnerName=null;
          dateTime=Instant.now().toString();
-         isRecorded=1;
+         isRecorded=0;
          gameMoves= new GameMoves();
          
     }
@@ -41,7 +41,7 @@ public class GameData {
          startedPlayerName=null;
          winnerName=null;
          dateTime=Instant.now().toString();
-         isRecorded=1;
+         isRecorded=0;
          gameMoves= new GameMoves();
          this.startSymbol=startSymbol;
     }

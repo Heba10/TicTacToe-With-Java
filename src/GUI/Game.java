@@ -54,6 +54,7 @@ public class Game extends Pane {
     protected final Button backbtn;
     protected final ImageView backbtnImage;
     protected final ImageView[][] GUIBoard;
+    protected final Button[][] GUIBoardBtns;
     protected final ImageView imageViewTurn;
     protected final Image imageX;
     protected final Image imageO;
@@ -106,7 +107,7 @@ public class Game extends Pane {
         
         
        
-    //Array Of Buttons        
+    //Array Of ImageViews of buttons        
         GUIBoard = new ImageView[3][3];
         GUIBoard[0][0] = view00;
         GUIBoard[0][1] = view01;
@@ -118,6 +119,20 @@ public class Game extends Pane {
         GUIBoard[2][1] = view21;
         GUIBoard[2][2] = view22;
         /////////
+        
+        //Array Of ImageViews of buttons        
+        GUIBoardBtns = new Button[3][3];
+        GUIBoardBtns[0][0] = btn00;
+        GUIBoardBtns[0][1] = btn01;
+        GUIBoardBtns[0][2] = btn02;
+        GUIBoardBtns[1][0] = btn10;
+        GUIBoardBtns[1][1] = btn11;
+        GUIBoardBtns[1][2] = btn12;
+        GUIBoardBtns[2][0] = btn20;
+        GUIBoardBtns[2][1] = btn21;
+        GUIBoardBtns[2][2] = btn22;
+        
+        
 //        imageViewTurn.setImage(new Image(getClass().getResource("images/x.png").toExternalForm()));
         
 
