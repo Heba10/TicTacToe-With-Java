@@ -41,7 +41,7 @@ public class Serversocket implements Runnable{
     
     public void sendGameMove(BoardPostion pos) throws IOException
     {
-        sendMyName("blabla");
+//        sendMyName("blabla");
         int x=pos.getX();
         int y=pos.getY();
         String send=x+"-"+y;

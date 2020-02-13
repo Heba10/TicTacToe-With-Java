@@ -67,7 +67,7 @@ public class ClientSocket implements Runnable{
     }
     public void receiveGameMove(BoardPostion pos) throws IOException
     {
-        receiveOtherPlayerName();
+//        receiveOtherPlayerName();
         String recieved=in.readUTF();
         String arr[]=new String [2];
         arr=recieved.split("-");
