@@ -916,8 +916,8 @@ public class TicTacToe extends Application {
 //                    System.out.println("pos receve x="+ pos.getX()+"y= "+pos.getY());
                     
                  ReaderThread th = new ReaderThread();
-//                 th.start();
-                 Platform.runLater(th);
+                 th.start();
+//                 Platform.runLater(th);
                  
 //                 NameThread th2=new NameThread();
 //                 Platform.runLater(th2);
@@ -945,41 +945,41 @@ public class TicTacToe extends Application {
             
         }
         
-        class NameThread extends Thread
-        {
-            @Override
-            public void run()
-            {
-                while(true)
-                {
-                     if(client!=null)
-                    {
-                        try {
-                            client.sendMyName(player.getName());
-                            gameData.setVsPlayerName(client.receiveOtherPlayerName());
-                            if(gameData.getVsPlayerName()!=null) break;
-
-                        } catch (IOException ex) {
-                            Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                    else
-                    {
-                        try {
-                            server.sendMyName(player.getName());
-                            gameData.setVsPlayerName(server.receiveOtherPlayerName());
-                            if(gameData.getVsPlayerName()!=null) break;
-
-
-
-                        } catch (IOException ex) {
-                            Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-                System.out.println("i got your name XD");
-            }
-        }
+//        class NameThread extends Thread
+//        {
+//            @Override
+//            public void run()
+//            {
+//                while(true)
+//                {
+//                     if(client!=null)
+//                    {
+//                        try {
+//                            client.sendMyName(player.getName());
+//                            gameData.setVsPlayerName(client.receiveOtherPlayerName());
+//                            if(gameData.getVsPlayerName()!=null) break;
+//
+//                        } catch (IOException ex) {
+//                            Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                    }
+//                    else
+//                    {
+//                        try {
+//                            server.sendMyName(player.getName());
+//                            gameData.setVsPlayerName(server.receiveOtherPlayerName());
+//                            if(gameData.getVsPlayerName()!=null) break;
+//
+//
+//
+//                        } catch (IOException ex) {
+//                            Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                    }
+//                }
+//                System.out.println("i got your name XD");
+//            }
+//        }
         
         class ReaderThread extends Thread
          {

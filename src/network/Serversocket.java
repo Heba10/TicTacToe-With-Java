@@ -54,14 +54,13 @@ public class Serversocket implements Runnable{
     {
         if(in==null)
             System.out.println("in is null ");
-        if(in!=null)
-        {
+        
             String recieved=in.readUTF();
             String arr[]=new String [2];
             arr=recieved.split("-");
             pos.setX(Integer.parseInt(arr[0]));
             pos.setY(Integer.parseInt(arr[1]));
-        }
+        
         
         
 //        System.out.println(" recieved= "+recieved);
