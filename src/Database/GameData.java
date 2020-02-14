@@ -24,9 +24,9 @@ public class GameData {
     public GameData()
     {
          id=0;
-         name=null;
-         vsPlayerName=null;
-         startedPlayerName=null;
+         name="Unknown";
+         vsPlayerName="Unknown";
+         startedPlayerName="Unknown";
          winnerName=null;
          dateTime=Instant.now().toString();
          isRecorded=0;
@@ -37,9 +37,9 @@ public class GameData {
     {
          this.id=id+1;
          name="Unkown";
-         vsPlayerName=null;
-         startedPlayerName=null;
-         winnerName=null;
+         vsPlayerName="Unknown";
+         startedPlayerName="Unknown";
+         winnerName="Unknown";
          dateTime=Instant.now().toString();
          isRecorded=0;
          gameMoves= new GameMoves();

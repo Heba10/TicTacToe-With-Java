@@ -18,7 +18,7 @@ public class PlayerData
          score=0;
          gameCountVsComputer=0;
          gameCountVsPlayer=0;
-         name=null;
+         name="Unknown";
          
     }
     

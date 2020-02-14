@@ -1145,14 +1145,15 @@ public class TicTacToe extends Application {
      //                         disableAllBtns();
                                 player.incScore();
      
-                        if(gameData!=null)
-                        try {
-                                 db.PushGame(gameData);
-                                 if(isNew)db.pushPlayer(player);
-                                 else db.updatePlayerData(player);
-                             } catch (SQLException ex) {
-                                 ex.printStackTrace();
-                             }
+//                        if(gameData!=null)
+//                        try {
+//                                 db.PushGame(gameData);
+//                                 if(isNew)db.pushPlayer(player);
+//                                 else db.updatePlayerData(player);
+//                             } catch (SQLException ex) {
+//                                 ex.printStackTrace();
+//                             }
+                                saveDataToDB();
                        
                              
                          } 
