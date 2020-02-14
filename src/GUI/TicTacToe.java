@@ -68,6 +68,9 @@ public class TicTacToe extends Application {
     public void start(Stage stage) throws Exception {
         
         
+        
+        
+        
         //Creating Scenes
         Scene1 scene = new Scene1();
         Scene sc1 = new Scene(scene);
@@ -99,7 +102,14 @@ public class TicTacToe extends Application {
         ////////////////////////
         
         //database
+        
         db=new DB();
+        if(!db.isExist())
+        {
+            db.createDB();
+            db.createTables();
+        }
+        
         //
        
         player = new PlayerData();
@@ -369,6 +379,7 @@ public class TicTacToe extends Application {
                 
                 new GameBuilder(stage);
 //                resetGUI();
+                saveMoves=false;
                 System.out.println(isNew);
             try {
                 gameData=new GameData(db.getLastGameIndex(),startSymbol);
@@ -385,6 +396,8 @@ public class TicTacToe extends Application {
                 stage.setScene(gm);
 //                resetGUI();
                 startSymbol="O";
+                saveMoves=false;
+
                 new GameBuilder(stage);
             try {
                 gameData=new GameData(db.getLastGameIndex(),startSymbol);
@@ -683,6 +696,9 @@ public class TicTacToe extends Application {
           //                }
 
                               gameLogic.resetBoard();
+                              
+                             
+                              
 //                              Game newGame = new Game();
 //                              Scene nGScene = new Scene(newGame);
 //
@@ -868,6 +884,7 @@ public class TicTacToe extends Application {
      
     public void saveDataToDB()
     {
+        System.out.println("savedata");
         if(gameData!=null)
             try {
                 if(saveMoves)

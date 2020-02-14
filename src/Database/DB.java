@@ -29,7 +29,7 @@ public class DB {
             con= DriverManager.getConnection("jdbc:sqlite:test.db");
             System.out.println("connection sucess");
             st=con.createStatement();
-            pst=con.prepareStatement("select * from GameData");
+//            pst=con.prepareStatement("select * from GameData");
             
         }
         
@@ -50,13 +50,14 @@ public class DB {
     
     public void createTables() throws SQLException
     {
-        sql="create table GameData(id INTEGER primary key autoincrement,name string(100) not null ,vsPlayerName string(100) not null, startedPlayerName string(100) not null ,winnerName string(100),dataTime date ,isRecorded integer(10) not null ,startSymbol char not null)";
+        establishConnection();
+        sql="create table GameData(id INTEGER primary key autoincrement,name string(100)  DEFAULT Game ,vsPlayerName string(100) not null, startedPlayerName string(100) not null ,winnerName string(100),dataTime date ,isRecorded integer(10) not null ,startSymbol char not null )";
         st.execute(sql);
         sql="create table GameMoves(id integer primary key autoincrement,xPos integer not null,yPos  integer not null,gameId integer REFERENCES GameData(id))";
         st.execute(sql);
         sql="create table PlayerData(id integer primary key autoincrement,name string(100) not null,score integer ,gameCountVsComputer integer ,gameCountVsPlayer integer) ";
         st.execute(sql);
-        closeConnection();
+//        closeConnection();
     }
    
     public void closeConnection() throws SQLException
