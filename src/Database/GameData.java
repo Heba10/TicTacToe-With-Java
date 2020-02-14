@@ -36,7 +36,7 @@ public class GameData {
     public GameData(int id, String startSymbol)
     {
          this.id=id+1;
-         name=null;
+         name="Unkown";
          vsPlayerName=null;
          startedPlayerName=null;
          winnerName=null;
