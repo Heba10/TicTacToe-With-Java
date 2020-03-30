@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView layoutX="-4.0" layoutY="108.0" prefHeight="496.0" prefWidth="806.0">
+        <columns>
+          <TableColumn prefWidth="160.0" text="Game Name" />
+          <TableColumn prefWidth="160.0" text="Player 1" />
+            <TableColumn minWidth="0.0" prefWidth="160.0" text="Player 2" />
+            <TableColumn prefWidth="160.0" text="Winner" />
+            <TableColumn minWidth="0.0" prefWidth="160.0" text="Time" />
+        </columns>
+      </TableView>
+      <Label layoutX="250.0" layoutY="21.0" text="Game Scores" textFill="#0f69cf">
+         <font>
+            <Font name="Arial Narrow" size="60.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>
